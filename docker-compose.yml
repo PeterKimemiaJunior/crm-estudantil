@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  web:
+    image: odoo:17.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    volumes:
+      - ./custom_addons:/mnt/custom_addons:z
+      - odoo_data:/var/lib/odoo
+    # MUITA ATENÇÃO A ESTA LINHA ABAIXO:
+    command: odoo --addons-path=/mnt/custom_addons,/usr/lib/python3/dist-packages/odoo/addons -i base,crm,website,survey,website_crm --dev=reload
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  odoo_data:
+  db_data:
