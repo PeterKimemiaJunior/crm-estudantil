@@ -6,7 +6,13 @@
     'description': """Módulo base.""",
     'author': 'Grupo 1 - Engenharia Informática UEM',
     'depends': ['crm', 'website', 'survey'],
-    'data': [],
+    'data': [
+        'views/website_oportunidades.xml',
+        'views/website_candidatura.xml',
+        'views/website_faq.xml',
+        'views/website_kanban.xml',
+        'views/website_dashboard.xml',
+    ],
     'assets': {
         'web.assets_frontend': [
             'crm_estudantil/static/src/css/custom_theme.scss',

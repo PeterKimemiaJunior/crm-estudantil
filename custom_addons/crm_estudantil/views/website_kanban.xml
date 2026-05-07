@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_kanban" model="ir.ui.view">
+            <field name="name">Kanban Pipeline</field>
+            <field name="type">qweb</field>
+            <field name="key">page_kanban</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                <div class="o_websites_full">
+                    <style>
+                        :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
+                        body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 15px; line-height: 1.6; margin: 0; padding: 0; }
+                        .app { display: flex; min-height: 100vh; }
+                        .sidebar { width: var(--sidebar-w); background: var(--primary-dark); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
+                        .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+                        .sidebar-logo .name { font-family: 'Source Serif 4', serif; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: 0.01em; }
+                        .sidebar-logo .sub { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+                        .sidebar nav { padding: 12px 0; flex: 1; }
+                        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); padding: 16px 20px 6px; }
+                        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; color: rgba(255,255,255,0.6); font-size: 13.5px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; text-decoration: none; }
+                        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+                        .nav-item.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--action); font-weight: 500; }
+                        .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+                        .nav-badge { margin-left: auto; background: var(--action); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
+                        .sidebar-user { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+                        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--action); color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                        .user-name { font-size: 12.5px; color: #fff; font-weight: 500; }
+                        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+                        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+                        .topbar { height: var(--topbar-h); background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 50; }
+                        .topbar-title { font-family: 'Source Serif 4', serif; font-size: 18px; font-weight: 600; color: var(--primary); }
+                        .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+                        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; font-family: inherit; transition: all 0.15s; text-decoration: none; }
+                        .btn-primary { background: var(--primary); color: #fff; }
+                        .btn-primary:hover { background: var(--primary-dark); }
+                        .btn-action { background: var(--action); color: #fff; }
+                        .btn-action:hover { background: var(--action-dark); }
+                        .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
+                        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+                        .page { padding: 28px; flex: 1; }
+                        .kanban-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+                        .kanban-topbar h2 { font-family: 'Source Serif 4', serif; font-size: 18px; color: var(--primary); flex: 1; }
+                        .kanban-select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 12.5px; font-family: inherit; background: var(--bg-card); color: var(--text-primary); cursor: pointer; outline: none; }
+                        .kanban-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; }
+                        .kanban-col { display: flex; flex-direction: column; gap: 10px; }
+                        .kanban-col-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+                        .col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+                        .col-name { font-size: 13px; font-weight: 600; flex: 1; }
+                        .col-count { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 10px; background: var(--bg-page); color: var(--text-muted); }
+                        .k-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-left: 4px solid; transition: box-shadow 0.15s; cursor: pointer; }
+                        .k-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+                        .k-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+                        .k-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+                        .k-nr { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+                        .k-company { font-size: 12px; color: var(--text-muted); margin: 6px 0; }
+                        .k-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+                        .k-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+                        .k-date { font-size: 11px; color: var(--text-muted); }
+                        .k-manager { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+                        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+                        .badge-estagio { background: var(--estagio-bg); color: var(--estagio-tx); }
+                        .badge-posgrad  { background: var(--posgrad-bg);  color: var(--posgrad-tx); }
+                        .badge-evento   { background: var(--evento-bg);   color: var(--evento-tx); }
+                        .badge-suporte  { background: var(--suporte-bg);  color: var(--suporte-tx); }
+                    </style>
+
+                    <div class="app">
+                        <aside class="sidebar">
+                            <div class="sidebar-logo"><div class="name">CRM Estudantil</div><div class="sub">Universidade Eduardo Mondlane</div></div>
+                            <nav>
+                                <div class="nav-section">Principal</div>
+                                <a class="nav-item" href="/oportunidades"><span class="nav-icon">📋</span> Oportunidades</a>
+                                <a class="nav-item active" href="/kanban"><span class="nav-icon">🗂️</span> Pipeline CRM<span class="nav-badge">9</span></a>
+                                <div class="nav-section">Estudante</div>
+                                <a class="nav-item" href="/candidatura"><span class="nav-icon">📝</span> Candidatar-se</a>
+                                <a class="nav-item" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
+                                <div class="nav-section">Gestão</div>
+                                <a class="nav-item" href="/dashboard"><span class="nav-icon">📧</span> Campanhas Email</a>
+                                <a class="nav-item" href="/dashboard"><span class="nav-icon">📊</span> Questionários</a>
+                            </nav>
+                            <div class="sidebar-user"><div class="user-avatar">GA</div><div><div class="user-name">Dr. Mussa Abílio</div><div class="user-role">Gestor Académico</div></div></div>
+                        </aside>
+                        <div class="main">
+                            <div class="topbar"><span class="topbar-title">Pipeline CRM</span>
+                                <div class="topbar-right"><a href="/faq" class="btn btn-outline">💬 Suporte</a><button class="btn btn-action">+ Nova Candidatura</button></div>
+                            </div>
+                            <div class="page">
+                                <div class="kanban-topbar"><h2>Pipeline CRM Estudantil</h2><select class="kanban-select"><option>Tipo de Oportunidade ▾</option><option>Estágio</option><option>Pós-Graduação</option><option>Evento</option><option>Suporte</option></select><select class="kanban-select"><option>Curso ▾</option><option>Eng. Informática</option><option>Gestão</option><option>Direito</option><option>Medicina</option></select><select class="kanban-select"><option>Gestor ▾</option><option>Dr. Mussa</option><option>Dr. Costa</option><option>Dra. Lopes</option></select><button class="btn btn-primary">+ Nova Oportunidade</button></div>
+                                <div class="kanban-board">
+                                    <div class="kanban-col"><div class="kanban-col-header"><div class="col-dot" style="background:#378ADD"></div><span class="col-name">Novo</span><span class="col-count">3</span></div>
+                                    <div class="k-card" style="border-left-color:#378ADD;"><div class="k-card-top"><div><div class="k-name">Ana Machava</div><div class="k-nr">Nº 20231045 · Eng. Informática</div></div><span class="badge badge-estagio">Estágio</span></div><div class="k-company">TechMoz Lda</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">MA</div> Dr. Mussa</div><span class="k-date">12 Abr</span></div></div>
+                                    <div class="k-card" style="border-left-color:#534AB7;"><div class="k-card-top"><div><div class="k-name">João Tembe</div><div class="k-nr">Nº 20220834 · Gestão</div></div><span class="badge badge-posgrad">Pós-Grad</span></div><div class="k-company">UEM — Fac. Gestão</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">CA</div> Dr. Costa</div><span class="k-date">11 Abr</span></div></div>
+                                    <div class="k-card" style="border-left-color:#BA7517;"><div class="k-card-top"><div><div class="k-name">Fátima Cossa</div><div class="k-nr">Nº 20241201 · Direito</div></div><span class="badge badge-evento">Evento</span></div><div class="k-company">Ordem dos Advogados</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">LA</div> Dra. Lopes</div><span class="k-date">10 Abr</span></div></div>
+                                    </div>
+                                    <div class="kanban-col"><div class="kanban-col-header"><div class="col-dot" style="background:#534AB7"></div><span class="col-name">Em Análise</span><span class="col-count">2</span></div>
+                                    <div class="k-card" style="border-left-color:#534AB7;"><div class="k-card-top"><div><div class="k-name">Carlos Nhaca</div><div class="k-nr">Nº 20210567 · Economia</div></div><span class="badge badge-posgrad">Pós-Grad</span></div><div class="k-company">UEM — Fac. Economia</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">MA</div> Dr. Mussa</div><span class="k-date">08 Abr</span></div></div>
+                                    <div class="k-card" style="border-left-color:#378ADD;"><div class="k-card-top"><div><div class="k-name">Lúcia Bila</div><div class="k-nr">Nº 20231089 · Informática</div></div><span class="badge badge-estagio">Estágio</span></div><div class="k-company">Banco BCI</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">CA</div> Dr. Costa</div><span class="k-date">07 Abr</span></div></div>
+                                    </div>
+                                    <div class="kanban-col"><div class="kanban-col-header"><div class="col-dot" style="background:#1D9E75"></div><span class="col-name">Aprovado</span><span class="col-count">2</span></div>
+                                    <div class="k-card" style="border-left-color:#1D9E75;"><div class="k-card-top"><div><div class="k-name">Pedro Mate</div><div class="k-nr">Nº 20220345 · Informática</div></div><span class="badge badge-estagio">Estágio</span></div><div class="k-company">Microsoft Moçambique</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">LA</div> Dra. Lopes</div><span class="k-date">05 Abr</span></div></div>
+                                    <div class="k-card" style="border-left-color:#639922;"><div class="k-card-top"><div><div class="k-name">Maria Sitoe</div><div class="k-nr">Nº 20231567 · Medicina</div></div><span class="badge badge-suporte">Suporte</span></div><div class="k-company">UEM — Serv. Bolsas</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">MA</div> Dr. Mussa</div><span class="k-date">03 Abr</span></div></div>
+                                    </div>
+                                    <div class="kanban-col"><div class="kanban-col-header"><div class="col-dot" style="background:#D85A30"></div><span class="col-name">Rejeitado</span><span class="col-count">2</span></div>
+                                    <div class="k-card" style="border-left-color:#D85A30;"><div class="k-card-top"><div><div class="k-name">Tomás Guambe</div><div class="k-nr">Nº 20190923 · Gestão</div></div><span class="badge badge-estagio">Estágio</span></div><div class="k-company">Banco BCI</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">CA</div> Dr. Costa</div><span class="k-date">01 Abr</span></div></div>
+                                    <div class="k-card" style="border-left-color:#D85A30;"><div class="k-card-top"><div><div class="k-name">Rosa Machel</div><div class="k-nr">Nº 20200412 · Direito</div></div><span class="badge badge-posgrad">Pós-Grad</span></div><div class="k-company">UEM — Fac. Direito</div><div class="k-footer"><div class="k-manager"><div class="k-avatar">LA</div> Dra. Lopes</div><span class="k-date">30 Mar</span></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </field>
+        </record>
+
+<record id="page_kanban" model="website.page">
+            <field name="name">Pipeline CRM</field>
+            <field name="url">/kanban</field>
+            <field name="website_published">True</field>
+            <field name="view_id" ref="crm_estudantil.view_kanban"/>
+        </record>
+    </data>
+</odoo>

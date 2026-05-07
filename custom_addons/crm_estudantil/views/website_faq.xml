@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_faq" model="ir.ui.view">
+            <field name="name">FAQ Suporte</field>
+            <field name="type">qweb</field>
+            <field name="key">page_faq</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                <div class="o_websites_full">
+                    <style>
+                        :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
+                        body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 15px; line-height: 1.6; margin: 0; padding: 0; }
+                        .app { display: flex; min-height: 100vh; }
+                        .sidebar { width: var(--sidebar-w); background: var(--primary-dark); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
+                        .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+                        .sidebar-logo .name { font-family: 'Source Serif 4', serif; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: 0.01em; }
+                        .sidebar-logo .sub { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+                        .sidebar nav { padding: 12px 0; flex: 1; }
+                        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); padding: 16px 20px 6px; }
+                        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; color: rgba(255,255,255,0.6); font-size: 13.5px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; text-decoration: none; }
+                        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+                        .nav-item.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--action); font-weight: 500; }
+                        .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+                        .nav-badge { margin-left: auto; background: var(--action); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
+                        .sidebar-user { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+                        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--action); color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                        .user-name { font-size: 12.5px; color: #fff; font-weight: 500; }
+                        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+                        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+                        .topbar { height: var(--topbar-h); background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 50; }
+                        .topbar-title { font-family: 'Source Serif 4', serif; font-size: 18px; font-weight: 600; color: var(--primary); }
+                        .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+                        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; font-family: inherit; transition: all 0.15s; text-decoration: none; }
+                        .btn-primary { background: var(--primary); color: #fff; }
+                        .btn-primary:hover { background: var(--primary-dark); }
+                        .btn-action { background: var(--action); color: #fff; }
+                        .btn-action:hover { background: var(--action-dark); }
+                        .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
+                        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+                        .page { padding: 28px; flex: 1; }
+                        .page-heading { margin-bottom: 24px; }
+                        .page-heading h1 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+                        .page-heading p { font-size: 13.5px; color: var(--text-muted); }
+                        .faq-search-wrap { position: relative; margin-bottom: 20px; }
+                        .faq-search-wrap input { width: 100%; max-width: 520px; padding: 10px 14px 10px 40px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-card); outline: none; transition: border 0.15s; }
+                        .faq-search-wrap input:focus { border-color: var(--action); box-shadow: 0 0 0 3px rgba(29,158,117,0.10); }
+                        .faq-search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+                        .faq-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; transition: opacity 0.2s; }
+                        .faq-item.hidden { opacity: 0.15; pointer-events: none; height: 0; margin: 0; border: none; }
+                        .faq-question { display: flex; align-items: center; gap: 12px; padding: 15px 18px; cursor: pointer; user-select: none; }
+                        .faq-question:hover { background: #FAFBFD; }
+                        .faq-q-text { font-size: 14px; font-weight: 500; flex: 1; }
+                        .faq-chevron { color: var(--primary); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
+                        .faq-item.open .faq-chevron { transform: rotate(180deg); }
+                        .faq-answer { display: none; padding: 0 18px 16px 18px; font-size: 13.5px; color: var(--text-muted); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 14px; }
+                        .faq-item.open .faq-answer { display: block; }
+                        .faq-cta-card { background: var(--bg-card); border: 1.5px dashed var(--action); border-radius: 10px; padding: 24px; text-align: center; margin-top: 24px; }
+                        .faq-cta-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+                        .faq-cta-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+                        .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+                        .filter-pill { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+                        .filter-pill.active, .filter-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+                        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+                        .badge-estagio { background: var(--estagio-bg); color: var(--estagio-tx); }
+                        .badge-suporte { background: var(--suporte-bg); color: var(--suporte-tx); }
+                        .badge-evento { background: var(--evento-bg); color: var(--evento-tx); }
+                    </style>
+
+                    <div class="app">
+                        <aside class="sidebar">
+                            <div class="sidebar-logo"><div class="name">CRM Estudantil</div><div class="sub">Universidade Eduardo Mondlane</div></div>
+                            <nav>
+                                <div class="nav-section">Principal</div>
+                                <a class="nav-item" href="/oportunidades"><span class="nav-icon">📋</span> Oportunidades</a>
+                                <a class="nav-item" href="/kanban"><span class="nav-icon">🗂️</span> Pipeline CRM<span class="nav-badge">9</span></a>
+                                <div class="nav-section">Estudante</div>
+                                <a class="nav-item" href="/candidatura"><span class="nav-icon">📝</span> Candidatar-se</a>
+                                <a class="nav-item active" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
+                                <div class="nav-section">Gestão</div>
+                                <a class="nav-item" href="/dashboard"><span class="nav-icon">📧</span> Campanhas Email</a>
+                                <a class="nav-item" href="/dashboard"><span class="nav-icon">📊</span> Questionários</a>
+                            </nav>
+                            <div class="sidebar-user"><div class="user-avatar">GA</div><div><div class="user-name">Dr. Mussa Abílio</div><div class="user-role">Gestor Académico</div></div></div>
+                        </aside>
+                        <div class="main">
+                            <div class="topbar"><span class="topbar-title">Suporte &amp; FAQ</span>
+                                <div class="topbar-right"><a href="/candidatura" class="btn btn-action">+ Nova Candidatura</a></div>
+                            </div>
+                            <div class="page">
+                                <div class="page-heading"><h1>Suporte Académico</h1><p>Encontra respostas às tuas dúvidas ou contacta a nossa equipa</p></div>
+                                <div class="faq-search-wrap"><span class="faq-search-icon">🔍</span><input type="text" id="faq-search" placeholder="Pesquisa artigos, dúvidas, tópicos..." oninput="filterFaq()"/></div>
+                                <div class="filter-pills" style="margin-bottom:20px;">
+                                    <button class="filter-pill active" onclick="setFaqFilter(this,'todos')">Todos</button>
+                                    <button class="filter-pill" onclick="setFaqFilter(this,'estagio')">Estágios</button>
+                                    <button class="filter-pill" onclick="setFaqFilter(this,'inscricoes')">Inscrições</button>
+                                    <button class="filter-pill" onclick="setFaqFilter(this,'bolsas')">Bolsas</button>
+                                    <button class="filter-pill" onclick="setFaqFilter(this,'regulamentos')">Regulamentos</button>
+                                </div>
+                                <div id="faq-list">
+                                    <div class="faq-item" data-cat="estagio" data-search="candidatar estágio formulário online"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Como me candidato a um estágio?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Acede à página de Oportunidades, selecciona a vaga desejada e preenche o formulário de candidatura. O processo é totalmente online e não requer deslocação presencial à secretaria.</div></div>
+                                    <div class="faq-item" data-cat="estagio" data-search="candidatar múltiplos estágios simultaneamente"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Posso candidatar-me a mais de um estágio ao mesmo tempo?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Sim, podes submeter candidaturas para múltiplas oportunidades em simultâneo. Cada candidatura é analisada de forma independente pela equipa académica.</div></div>
+                                    <div class="faq-item" data-cat="inscricoes" data-search="documentos necessários candidatura cv carta"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte" style="background:var(--posgrad-bg);color:var(--posgrad-tx)">Inscrições</span><span class="faq-q-text">Quais os documentos necessários para a candidatura?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Necessitas de: CV actualizado em PDF ou Word (máx. 5MB), carta de motivação preenchida directamente no formulário e número de estudante activo na UEM.</div></div>
+                                    <div class="faq-item" data-cat="inscricoes" data-search="prazo resposta análise candidatura dias"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte" style="background:var(--posgrad-bg);color:var(--posgrad-tx)">Inscrições</span><span class="faq-q-text">Qual o prazo de resposta após submissão?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">A equipa académica analisa todas as candidaturas em até 10 dias úteis após a submissão. Receberás uma notificação por email institucional com o resultado da análise.</div></div>
+                                    <div class="faq-item" data-cat="bolsas" data-search="bolsa mérito elegibilidade média valores"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte">Bolsas</span><span class="faq-q-text">Como sei se tenho direito a uma bolsa de mérito?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">As bolsas de mérito são atribuídas a estudantes com média académica igual ou superior a 14 valores. Verifica a tua elegibilidade na secção de Oportunidades, filtrada por tipo Suporte.</div></div>
+                                    <div class="faq-item" data-cat="bolsas" data-search="bolsa propinas alojamento subsídio cobre"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte">Bolsas</span><span class="faq-q-text">As bolsas cobrem propinas e alojamento?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Depende do programa específico. Algumas bolsas cobrem apenas propinas, outras incluem subsídio mensal. Consulta os detalhes de cada bolsa na página de Oportunidades.</div></div>
+                                    <div class="faq-item" data-cat="regulamentos" data-search="candidatura rejeitada feedback contactar gestor"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-evento">Regulamentos</span><span class="faq-q-text">O que acontece se a minha candidatura for rejeitada?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Receberás um email explicativo com o motivo. Podes candidatar-te noutros ciclos de candidatura ou contactar directamente o gestor académico responsável para feedback detalhado.</div></div>
+                                    <div class="faq-item" data-cat="regulamentos" data-search="dados confidenciais privacidade partilha empresa"><div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-evento">Regulamentos</span><span class="faq-q-text">Os dados da minha candidatura são confidenciais?</span><span class="faq-chevron">▼</span></div><div class="faq-answer">Sim. Os teus dados são tratados em conformidade com a política de privacidade da UEM. Apenas são partilhados com a entidade parceira seleccionada e somente após a tua autorização explícita.</div></div>
+                                </div>
+                                <div class="faq-cta-card"><h3>Não encontraste o que procuras?</h3><p>Fala directamente com a equipa académica — respondemos em 1 dia útil.</p><button class="btn btn-action">📧 Contactar Suporte</button></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        let activeFaqFilter = 'todos';
+                        function setFaqFilter(el, cat) { document.querySelectorAll('.filter-pills .filter-pill').forEach(p => p.classList.remove('active')); el.classList.add('active'); activeFaqFilter = cat; filterFaq(); }
+                        function filterFaq() { const q = document.getElementById('faq-search').value.toLowerCase(); document.querySelectorAll('.faq-item').forEach(item => { const matchCat = activeFaqFilter === 'todos' || item.dataset.cat === activeFaqFilter; const matchQ = !q || item.dataset.search.includes(q) || item.querySelector('.faq-q-text').textContent.toLowerCase().includes(q); item.classList.toggle('hidden', !(matchCat &amp;&amp; matchQ)); }); }
+                        function toggleFaq(el) { const item = el.closest('.faq-item'); item.classList.toggle('open'); }
+                    </script>
+                </div>
+            </t>
+        </field>
+        </record>
+
+<record id="page_faq" model="website.page">
+            <field name="name">Suporte &amp; FAQ</field>
+            <field name="url">/faq</field>
+            <field name="website_published">True</field>
+            <field name="view_id" ref="crm_estudantil.view_faq"/>
+        </record>
+    </data>
+</odoo>
