@@ -485,6 +485,7 @@
             <field name="url">/oportunidades</field>
             <field name="website_published">True</field>
             <field name="view_id" ref="crm_estudantil.view_oportunidades"/>
+            <field name="footer_visible">False</field>
         </record>
     </data>
 </odoo>

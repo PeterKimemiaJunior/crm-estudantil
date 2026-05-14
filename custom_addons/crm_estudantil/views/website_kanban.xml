@@ -118,7 +118,6 @@
             <field name="name">Pipeline CRM</field>
             <field name="url">/kanban</field>
             <field name="website_published">True</field>
-            <field name="view_id" ref="crm_estudantil.view_kanban"/>
-        </record>
+            <field name="view_id" ref="crm_estudantil.view_kanban"/>            <field name="footer_visible">False</field>        </record>
     </data>
 </odoo>

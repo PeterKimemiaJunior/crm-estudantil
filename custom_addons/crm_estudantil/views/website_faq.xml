@@ -127,7 +127,6 @@
             <field name="name">Suporte &amp; FAQ</field>
             <field name="url">/faq</field>
             <field name="website_published">True</field>
-            <field name="view_id" ref="crm_estudantil.view_faq"/>
-        </record>
+            <field name="view_id" ref="crm_estudantil.view_faq"/>            <field name="footer_visible">False</field>        </record>
     </data>
 </odoo>
