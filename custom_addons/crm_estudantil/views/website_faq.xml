@@ -5,8 +5,8 @@
             <t t-call="website.layout">
                 <div class="o_websites_full">
                     <style>
-                        /* CSS DO PROTÓTIPO AQUI (Igual ao Oportunidades, mas com as classes de FAQ) */
-                        :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
+                        /* Reutiliza o CSS base (Sidebar, Topbar, etc.) */
+                         :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
                         body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 15px; line-height: 1.6; margin: 0; padding: 0; }
                         .app { display: flex; min-height: 100vh; }
                         .sidebar { width: var(--sidebar-w); background: var(--primary-dark); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
@@ -37,7 +37,7 @@
                         .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
                         .page { padding: 28px; flex: 1; }
                         
-                        /* Estilos específicos do FAQ */
+                        /* Estilos Específicos do FAQ */
                         .faq-search-wrap { position: relative; margin-bottom: 20px; }
                         .faq-search-wrap input { width: 100%; max-width: 520px; padding: 10px 14px 10px 40px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-card); outline: none; transition: border 0.15s; }
                         .faq-search-wrap input:focus { border-color: var(--action); box-shadow: 0 0 0 3px rgba(29,158,117,0.10); }
@@ -66,16 +66,16 @@
                             <nav>
                                 <div class="nav-section">Principal</div>
                                 <a class="nav-item" href="/oportunidades"><span class="nav-icon">📋</span> Oportunidades</a>
-                                <a class="nav-item" href="/gestao-candidaturas"><span class="nav-icon">🗂️</span> Pipeline CRM</a>
-                                <div class="nav-section">Estudante</div>
+                                <div class="nav-section">Gestão</div>
+                                <a class="nav-item" href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
                                 <a class="nav-item active" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
                             </nav>
                         </aside>
                         <div class="main">
                             <div class="topbar"><span class="topbar-title">Suporte &amp; FAQ</span></div>
                             <div class="page">
-                                <h1 style="font-family: 'Source Serif 4', serif; color: #0F4C81; margin-bottom: 10px;">Suporte Académico</h1>
-                                <p style="color: var(--text-muted); margin-bottom: 24px;">Encontra respostas às tuas dúvidas ou contacta a nossa equipa</p>
+                                <h1 style="font-family: 'Source Serif 4', serif; color: #0F4C81; margin-bottom: 10px;">Base de Conhecimento</h1>
+                                <p style="color: var(--text-muted); margin-bottom: 24px;">Encontra respostas às tuas dúvidas sobre candidaturas e estágios.</p>
                                 
                                 <div class="faq-search-wrap">
                                     <span class="faq-search-icon">🔍</span>
@@ -85,23 +85,26 @@
                                     <button class="filter-pill active" onclick="setFaqFilter(this,'todos')">Todos</button>
                                     <button class="filter-pill" onclick="setFaqFilter(this,'estagio')">Estágios</button>
                                     <button class="filter-pill" onclick="setFaqFilter(this,'inscricoes')">Inscrições</button>
-                                    <button class="filter-pill" onclick="setFaqFilter(this,'bolsas')">Bolsas</button>
                                     <button class="filter-pill" onclick="setFaqFilter(this,'regulamentos')">Regulamentos</button>
                                 </div>
                                 
                                 <div id="faq-list">
+                                    <!-- Item 1 -->
                                     <div class="faq-item" data-cat="estagio" data-search="candidatar estágio formulário online">
                                         <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Como me candidato a um estágio?</span><span class="faq-chevron">▼</span></div>
                                         <div class="faq-answer">Acede à página de Oportunidades, selecciona a vaga desejada e preenche o formulário de candidatura.</div>
                                     </div>
+                                    <!-- Item 2 -->
                                     <div class="faq-item" data-cat="estagio" data-search="candidatar múltiplos estágios simultaneamente">
                                         <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Posso candidatar-me a mais de um estágio?</span><span class="faq-chevron">▼</span></div>
                                         <div class="faq-answer">Sim, podes submeter candidaturas para múltiplas oportunidades em simultâneo.</div>
                                     </div>
+                                    <!-- Item 3 -->
                                     <div class="faq-item" data-cat="inscricoes" data-search="documentos necessários candidatura cv carta">
                                         <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte" style="background:var(--posgrad-bg);color:var(--posgrad-tx)">Inscrições</span><span class="faq-q-text">Quais os documentos necessários?</span><span class="faq-chevron">▼</span></div>
                                         <div class="faq-answer">Necessitas de: CV actualizado em PDF ou Word, carta de motivação e número de estudante activo na UEM.</div>
                                     </div>
+                                    <!-- Item 4 -->
                                     <div class="faq-item" data-cat="regulamentos" data-search="dados confidenciais privacidade partilha empresa">
                                         <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-evento">Regulamentos</span><span class="faq-q-text">Os dados são confidenciais?</span><span class="faq-chevron">▼</span></div>
                                         <div class="faq-answer">Sim. Os teus dados são tratados em conformidade com a política de privacidade da UEM.</div>

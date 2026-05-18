@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_dashboard" model="ir.ui.view">
-            <field name="name">Dashboard Stats</field>
-            <field name="type">qweb</field>
-            <field name="key">page_dashboard</field>
-            <field name="arch" type="xml">
-                <t t-call="website.layout">
+        <template id="page_dashboard" name="Dashboard">
+            <t t-call="website.layout">
                 <div class="o_websites_full">
+                    <!-- Reutiliza o CSS global (mesmo das outras páginas) -->
                     <style>
-                        :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
+                         :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
                         body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 15px; line-height: 1.6; margin: 0; padding: 0; }
                         .app { display: flex; min-height: 100vh; }
                         .sidebar { width: var(--sidebar-w); background: var(--primary-dark); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
@@ -39,9 +36,6 @@
                         .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
                         .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
                         .page { padding: 28px; flex: 1; }
-                        .page-heading { margin-bottom: 24px; }
-                        .page-heading h1 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
-                        .page-heading p { font-size: 13.5px; color: var(--text-muted); }
                         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
                         .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
                         .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
@@ -52,40 +46,12 @@
                         .charts-row { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 24px; }
                         .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
                         .chart-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; }
-                        .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
-                        .bar-group { display: flex; align-items: flex-end; gap: 3px; flex: 1; }
-                        .bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 4px; transition: opacity 0.2s; }
-                        .bar:hover { opacity: 0.8; }
-                        .bar-labels { display: flex; justify-content: space-around; margin-top: 8px; }
-                        .bar-label { font-size: 11px; color: var(--text-muted); flex: 1; text-align: center; }
-                        .chart-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
-                        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text-muted); }
-                        .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
                         .funnel { display: flex; flex-direction: column; gap: 8px; }
                         .funnel-row { display: flex; flex-direction: column; gap: 4px; }
                         .funnel-label { display: flex; justify-content: space-between; font-size: 12px; }
                         .funnel-label span:first-child { color: var(--text-primary); font-weight: 500; }
                         .funnel-label span:last-child { color: var(--text-muted); }
                         .funnel-bar { height: 22px; border-radius: 4px; transition: width 0.3s; }
-                        .table-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
-                        .table-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-                        .table-header h3 { font-size: 14px; font-weight: 600; }
-                        .table-header a { font-size: 12.5px; color: var(--primary); text-decoration: none; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); font-weight: 600; padding: 10px 20px; text-align: left; background: #FAFBFD; border-bottom: 1px solid var(--border); }
-                        td { padding: 12px 20px; font-size: 13px; border-bottom: 1px solid #F2F4F7; color: var(--text-primary); }
-                        tr:last-child td { border-bottom: none; }
-                        tr:hover td { background: #FAFBFD; }
-                        .quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-                        .qa-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
-                        .qa-icon { font-size: 22px; }
-                        .qa-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-                        .qa-sub { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; flex: 1; }
-                        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
-                        .badge-estagio { background: var(--estagio-bg); color: var(--estagio-tx); }
-                        .badge-posgrad  { background: var(--posgrad-bg);  color: var(--posgrad-tx); }
-                        .badge-evento   { background: var(--evento-bg);   color: var(--evento-tx); }
-                        .badge-suporte  { background: var(--suporte-bg);  color: var(--suporte-tx); }
                     </style>
 
                     <div class="app">
@@ -94,75 +60,69 @@
                             <nav>
                                 <div class="nav-section">Principal</div>
                                 <a class="nav-item" href="/oportunidades"><span class="nav-icon">📋</span> Oportunidades</a>
-                                <a class="nav-item" href="/kanban"><span class="nav-icon">🗂️</span> Pipeline CRM<span class="nav-badge">9</span></a>
-                                <div class="nav-section">Estudante</div>
-                                <a class="nav-item" href="/candidatura"><span class="nav-icon">📝</span> Candidatar-se</a>
-                                <a class="nav-item" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
                                 <div class="nav-section">Gestão</div>
-                                <a class="nav-item active" href="/dashboard"><span class="nav-icon">📧</span> Campanhas Email</a>
-                                <a class="nav-item active" href="/dashboard"><span class="nav-icon">📊</span> Questionários</a>
+                                <a class="nav-item active" href="/dashboard"><span class="nav-icon">📊</span> Dashboard</a>
+                                <a class="nav-item" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
                             </nav>
-                            <div class="sidebar-user"><div class="user-avatar">GA</div><div><div class="user-name">Dr. Mussa Abílio</div><div class="user-role">Gestor Académico</div></div></div>
                         </aside>
                         <div class="main">
-                            <div class="topbar"><span class="topbar-title">Dashboard</span>
-                                <div class="topbar-right"><a href="/faq" class="btn btn-outline">💬 Suporte</a><button class="btn btn-action">+ Nova Candidatura</button></div>
-                            </div>
+                            <div class="topbar"><span class="topbar-title">Dashboard</span></div>
                             <div class="page">
-                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;"><div class="page-heading" style="margin:0;"><h1>Dashboard</h1><p>Resumo do mês de Abril de 2026</p></div><div style="display:flex;gap:10px;"><button class="btn btn-outline">📅 Abr 2026 ▾</button><button class="btn btn-primary">📊 Exportar PDF</button></div></div>
+                                <h1 style="font-family: 'Source Serif 4', serif; color: #0F4C81; margin-bottom: 20px;">Resumo de Candidaturas</h1>
+                                
+                                <!-- Estatísticas -->
                                 <div class="stats-grid">
-                                    <div class="stat-card"><div class="stat-label">👥 Total Candidaturas</div><div class="stat-value">47</div><div class="stat-trend trend-up">↑ +12% vs mês anterior</div></div>
-                                    <div class="stat-card"><div class="stat-label">✅ Aprovadas</div><div class="stat-value" style="color:var(--action)">28</div><div class="stat-trend trend-up">↑ +5 este mês</div></div>
-                                    <div class="stat-card"><div class="stat-label">📈 Taxa de Sucesso</div><div class="stat-value">59%</div><div class="stat-trend trend-down">↓ -2.3% vs anterior</div></div>
-                                    <div class="stat-card"><div class="stat-label">📧 Questionários Enviados</div><div class="stat-value" style="color:#534AB7">134</div><div class="stat-trend trend-up">↑ +34 esta semana</div></div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">👥 Total Candidaturas</div>
+                                        <div class="stat-value" t-esc="total">0</div>
+                                        <div class="stat-trend trend-up">Registos na base de dados</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">✅ Aprovadas</div>
+                                        <div class="stat-value" style="color:var(--action)" t-esc="stats['aprovado']">0</div>
+                                        <div class="stat-trend trend-up">Concluídas</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">📈 Taxa de Sucesso</div>
+                                        <div class="stat-value" t-esc="taxa_sucesso">0</div><span>%</span>
+                                        <div class="stat-trend trend-down">Baseado no total</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-label">🔍 Em Análise</div>
+                                        <div class="stat-value" style="color:#534AB7" t-esc="stats['analise']">0</div>
+                                        <div class="stat-trend">A aguardar resposta</div>
+                                    </div>
                                 </div>
+
+                                <!-- Funil Visual -->
                                 <div class="charts-row">
                                     <div class="chart-card">
-                                        <div class="chart-title">Candidaturas por Tipo e Mês</div>
-                                        <div class="bar-chart"><div class="bar-group"><div class="bar" style="background:#378ADD;height:60px;"></div><div class="bar" style="background:#534AB7;height:30px;"></div><div class="bar" style="background:#BA7517;height:20px;"></div><div class="bar" style="background:#639922;height:15px;"></div></div><div class="bar-group"><div class="bar" style="background:#378ADD;height:80px;"></div><div class="bar" style="background:#534AB7;height:45px;"></div><div class="bar" style="background:#BA7517;height:35px;"></div><div class="bar" style="background:#639922;height:20px;"></div></div><div class="bar-group"><div class="bar" style="background:#378ADD;height:100px;"></div><div class="bar" style="background:#534AB7;height:55px;"></div><div class="bar" style="background:#BA7517;height:40px;"></div><div class="bar" style="background:#639922;height:30px;"></div></div><div class="bar-group"><div class="bar" style="background:#378ADD;height:90px;"></div><div class="bar" style="background:#534AB7;height:50px;"></div><div class="bar" style="background:#BA7517;height:45px;"></div><div class="bar" style="background:#639922;height:25px;"></div></div></div>
-                                        <div class="bar-labels"><span class="bar-label">Jan</span><span class="bar-label">Fev</span><span class="bar-label">Mar</span><span class="bar-label">Abr</span></div>
-                                        <div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:#378ADD"></div>Estágio</div><div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>Pós-Grad</div><div class="legend-item"><div class="legend-dot" style="background:#BA7517"></div>Evento</div><div class="legend-item"><div class="legend-dot" style="background:#639922"></div>Suporte</div></div>
-                                    </div>
-                                    <div class="chart-card">
-                                        <div class="chart-title">Pipeline Actual</div>
+                                        <div class="chart-title">Pipeline Actual (Funil)</div>
                                         <div class="funnel">
-                                            <div class="funnel-row"><div class="funnel-label"><span>Novo</span><span>47 candidatos</span></div><div class="funnel-bar" style="background:#378ADD;width:100%;"></div></div>
-                                            <div class="funnel-row"><div class="funnel-label"><span>Em Análise</span><span>31 (66%)</span></div><div class="funnel-bar" style="background:#534AB7;width:66%;"></div></div>
-                                            <div class="funnel-row"><div class="funnel-label"><span>Aprovado</span><span>28 (60%)</span></div><div class="funnel-bar" style="background:#1D9E75;width:60%;"></div></div>
-                                            <div class="funnel-row"><div class="funnel-label"><span>Rejeitado</span><span>8 (17%)</span></div><div class="funnel-bar" style="background:#D85A30;width:17%;"></div></div>
+                                            <div class="funnel-row">
+                                                <div class="funnel-label"><span>Novo</span><span t-esc="stats['novo']">0</span></div>
+                                                <div class="funnel-bar" style="background:#378ADD;width:100%;"></div>
+                                            </div>
+                                            <div class="funnel-row">
+                                                <div class="funnel-label"><span>Em Análise</span><span t-esc="stats['analise']">0</span></div>
+                                                <div class="funnel-bar" t-attf-style="background:#534AB7;width: {{ (stats['analise']/total*100) if total > 0 else 0 }}%;"></div>
+                                            </div>
+                                            <div class="funnel-row">
+                                                <div class="funnel-label"><span>Aprovado</span><span t-esc="stats['aprovado']">0</span></div>
+                                                <div class="funnel-bar" t-attf-style="background:#1D9E75;width: {{ (stats['aprovado']/total*100) if total > 0 else 0 }}%;"></div>
+                                            </div>
+                                            <div class="funnel-row">
+                                                <div class="funnel-label"><span>Rejeitado</span><span t-esc="stats['rejeitado']">0</span></div>
+                                                <div class="funnel-bar" t-attf-style="background:#D85A30;width: {{ (stats['rejeitado']/total*100) if total > 0 else 0 }}%;"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="table-card">
-                                    <div class="table-header"><h3>Candidaturas Recentes</h3><a href="/kanban">Ver todas →</a></div>
-                                    <table><thead><tr><th>Nome</th><th>Curso</th><th>Tipo</th><th>Data</th><th>Estado</th><th>Gestor</th></tr></thead><tbody>
-                                    <tr><td>Ana Machava</td><td>Eng. Informática</td><td><span class="badge badge-estagio">Estágio</span></td><td>12 Abr 2026</td><td><span class="badge" style="background:#E6F1FB;color:#0F4C81">Novo</span></td><td>Dr. Mussa</td></tr>
-                                    <tr><td>João Tembe</td><td>Gestão</td><td><span class="badge badge-posgrad">Pós-Grad</span></td><td>11 Abr 2026</td><td><span class="badge" style="background:#E6F1FB;color:#0F4C81">Novo</span></td><td>Dr. Costa</td></tr>
-                                    <tr><td>Carlos Nhaca</td><td>Economia</td><td><span class="badge badge-posgrad">Pós-Grad</span></td><td>08 Abr 2026</td><td><span class="badge" style="background:#EEEDFE;color:#3C3489">Em Análise</span></td><td>Dr. Mussa</td></tr>
-                                    <tr><td>Lúcia Bila</td><td>Informática</td><td><span class="badge badge-estagio">Estágio</span></td><td>07 Abr 2026</td><td><span class="badge" style="background:#EEEDFE;color:#3C3489">Em Análise</span></td><td>Dr. Costa</td></tr>
-                                    <tr><td>Pedro Mate</td><td>Informática</td><td><span class="badge badge-estagio">Estágio</span></td><td>05 Abr 2026</td><td><span class="badge" style="background:#E1F5EE;color:#085041">Aprovado</span></td><td>Dra. Lopes</td></tr>
-                                    <tr><td>Tomás Guambe</td><td>Gestão</td><td><span class="badge badge-estagio">Estágio</span></td><td>01 Abr 2026</td><td><span class="badge" style="background:#FAECE7;color:#993C1D">Rejeitado</span></td><td>Dr. Costa</td></tr>
-                                    </tbody></table>
-                                </div>
-                                <div class="quick-actions">
-                                    <div class="qa-card"><div class="qa-icon">📧</div><div class="qa-title">Enviar Questionário de Satisfação</div><div class="qa-sub">Selecciona contactos do CRM e envia campanha por email</div><button class="btn btn-primary" style="margin-top:8px;">Enviar Campanha</button></div>
-                                    <div class="qa-card"><div class="qa-icon">➕</div><div class="qa-title">Criar Nova Oportunidade</div><div class="qa-sub">Adiciona manualmente uma vaga ou evento ao pipeline</div><button class="btn btn-action" style="margin-top:8px;" onclick="window.location.href='/kanban'">Criar Oportunidade</button></div>
-                                    <div class="qa-card"><div class="qa-icon">📊</div><div class="qa-title">Exportar Relatório</div><div class="qa-sub">Exporta dados filtrados em formato Excel ou PDF</div><button class="btn btn-outline" style="margin-top:8px;">Exportar Dados</button></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </t>
-        </field>
-        </record>
-
-<record id="page_dashboard" model="website.page">
-            <field name="name">Dashboard</field>
-            <field name="url">/dashboard</field>
-            <field name="website_published">True</field>
-            <field name="view_id" ref="crm_estudantil.view_dashboard"/>
-            <field name="footer_visible">False</field>
-        </record>
+        </template>
     </data>
 </odoo>

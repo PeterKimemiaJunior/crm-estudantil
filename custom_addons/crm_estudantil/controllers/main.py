@@ -7,7 +7,7 @@ from odoo.http import request
 
 class CrmEstudantilController(http.Controller):
 
-    # 1. Rota para Submissão do Formulário (Candidatura)
+    # 1. API para Submissão do Formulário
     @http.route('/crm_estudantil/submit_lead', type='json', auth='public', methods=['POST'])
     def submit_lead(self, **kwargs):
         try:
@@ -34,25 +34,24 @@ class CrmEstudantilController(http.Controller):
         except Exception as e:
             return {'success': False, 'message': f'Erro interno: {str(e)}'}
 
-    # 2. Rota para a Página de Oportunidades (Dinâmica)
+    # 2. Rota de Oportunidades (Dinâmica - já criada anteriormente)
     @http.route('/oportunidades', type='http', auth='public', website=True)
     def oportunidades(self, **kwargs):
-        # Lê todos os leads ativos (excluindo os rejeitados/perdidos para não aparecerem no site)
-        # Assumimos que leads 'Lost' não são visíveis ou usamos um filtro simples
         leads = request.env['crm.lead'].sudo().search([
-            ('type', '=', 'lead'),
-            ('active', '=', True)
+            ('student_number', '!=', False),
+            ('type', '=', 'lead')
         ], order='create_date desc')
-
-        # Preparamos uma lista de dicionários para o template
+        
+        # Prepara os dados para o template
         opportunities = []
         for lead in leads:
             opportunities.append({
                 'id': lead.id,
                 'name': lead.name,
-                'description': lead.description or 'Clique para saber mais detalhes sobre esta oportunidade.',
-                'opportunity_type': lead.opportunity_type, # estagio, posgraduacao, evento, suporte
-                'company_name': 'UEM - Faculdade de ' + (dict(lead._fields['course'].selection).get(lead.course, 'Geral') or 'Geral'),
+                'contact_name': lead.contact_name,
+                'company_name': 'UEM', 
+                'description': lead.description or 'Clica para ver detalhes.',
+                'opportunity_type': lead.opportunity_type,
                 'create_date': lead.create_date.strftime('%d %b %Y'),
                 'initials': (lead.contact_name[:2] if lead.contact_name else '??').upper()
             })
@@ -61,7 +60,34 @@ class CrmEstudantilController(http.Controller):
             'opportunities': opportunities
         })
 
-    # 3. Rota para a Página de FAQ (Estática com JS)
+    # 3. Rota de FAQ (Estática com JS)
     @http.route('/faq', type='http', auth='public', website=True)
     def faq(self, **kwargs):
         return request.render('crm_estudantil.page_faq')
+
+    # 4. Rota de Dashboard (DINÂMICA - Lê da Base de Dados)
+    @http.route('/dashboard', type='http', auth='public', website=True)
+    def dashboard(self, **kwargs):
+        # Ler todos os leads
+        all_leads = request.env['crm.lead'].sudo().search([('type', '=', 'lead')])
+        total = len(all_leads)
+
+        # Contar por estado (Stage)
+        # Mapeamento: 'New' -> Novo, 'Qualified' -> Análise, 'Won' -> Ganho/Aprovado, 'Lost' -> Perdido
+        stats = {
+            'novo': len(all_leads.filtered(lambda l: not l.stage_id or l.stage_id.name == 'New')),
+            'analise': len(all_leads.filtered(lambda l: l.stage_id.name in ['Qualified', 'Proposition'])),
+            'aprovado': len(all_leads.filtered(lambda l: l.stage_id.name == 'Won')),
+            'rejeitado': len(all_leads.filtered(lambda l: l.stage_id.name == 'Lost'))
+        }
+
+        # Calcular taxa de sucesso
+        taxa_sucesso = 0
+        if total > 0:
+            taxa_sucesso = int((stats['aprovado'] / total) * 100)
+
+        return request.render('crm_estudantil.page_dashboard', {
+            'stats': stats,
+            'total': total,
+            'taxa_sucesso': taxa_sucesso
+        })
