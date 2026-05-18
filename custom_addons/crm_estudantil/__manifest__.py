@@ -12,6 +12,7 @@
         'views/website_faq.xml',
         'views/website_kanban.xml',
         'views/website_dashboard.xml',
+        'views/gestao_candidaturas.xml',
     ],
     'assets': {
         'web.assets_frontend': [

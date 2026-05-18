@@ -1,5 +1,3 @@
-
-
 services:
   web:
     image: odoo:17.0
@@ -15,7 +13,7 @@ services:
       - ./custom_addons:/mnt/custom_addons:z
       - odoo_data:/var/lib/odoo
     # MUITA ATENÇÃO A ESTA LINHA ABAIXO:
-    command: odoo --addons-path=/mnt/custom_addons,/usr/lib/python3/dist-packages/odoo/addons -i base,crm,website,survey,website_crm --dev=reload
+    command: odoo --addons-path=/mnt/custom_addons,/usr/lib/python3/dist-packages/odoo/addons -i base,crm,website,survey,website_crm,crm_estudantil --dev=reload
 
   db:
     image: postgres:15
