@@ -7,6 +7,7 @@
     'author': 'Grupo 1 - Engenharia Informática UEM',
     'depends': ['crm', 'website', 'survey'],
     'data': [
+        'views/website_layout.xml',
         'views/website_oportunidades.xml',
         'views/website_candidatura.xml',
         'views/website_faq.xml',

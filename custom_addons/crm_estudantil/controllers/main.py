@@ -91,3 +91,13 @@ class CrmEstudantilController(http.Controller):
             'total': total,
             'taxa_sucesso': taxa_sucesso
         })
+
+    # 5. Rota de Candidatura (Formulário)
+    @http.route('/candidatura', type='http', auth='public', website=True)
+    def candidatura(self, **kwargs):
+        return request.render('crm_estudantil.page_candidatura')
+
+    # 6. Rota de Kanban (Pipeline CRM)
+    @http.route('/kanban', type='http', auth='public', website=True)
+    def kanban(self, **kwargs):
+        return request.render('crm_estudantil.page_kanban')

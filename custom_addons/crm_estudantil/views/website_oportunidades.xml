@@ -2,85 +2,38 @@
 <odoo>
     <data>
         <template id="page_oportunidades" name="Oportunidades">
-            <t t-call="website.layout">
-                <div class="o_websites_full">
-                    <style>
-                        /* CSS DO PROTÓTIPO AQUI */
-                        :root { --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53; --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56; --bg-page: #F2F4F7; --bg-card: #FFFFFF; --text-primary: #1A2B3C; --text-muted: #5A6475; --border: #DDE3EC; --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81; --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489; --evento-bg: #FFF3DC; --evento-tx: #7A4F00; --suporte-bg: #EAF3DE; --suporte-tx: #27500A; --sidebar-w: 240px; --topbar-h: 60px; }
-                        body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg-page); color: var(--text-primary); font-size: 15px; line-height: 1.6; margin: 0; padding: 0; }
-                        .app { display: flex; min-height: 100vh; }
-                        .sidebar { width: var(--sidebar-w); background: var(--primary-dark); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; border-right: 1px solid rgba(255,255,255,0.06); }
-                        .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-                        .sidebar-logo .name { font-family: 'Source Serif 4', serif; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: 0.01em; }
-                        .sidebar-logo .sub { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
-                        .sidebar nav { padding: 12px 0; flex: 1; }
-                        .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); padding: 16px 20px 6px; }
-                        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; color: rgba(255,255,255,0.6); font-size: 13.5px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; text-decoration: none; }
-                        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
-                        .nav-item.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--action); font-weight: 500; }
-                        .nav-icon { font-size: 15px; width: 18px; text-align: center; }
-                        .nav-badge { margin-left: auto; background: var(--action); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; }
-                        .sidebar-user { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
-                        .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--action); color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-                        .user-name { font-size: 12.5px; color: #fff; font-weight: 500; }
-                        .user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
-                        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
-                        .topbar { height: var(--topbar-h); background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 50; }
-                        .topbar-title { font-family: 'Source Serif 4', serif; font-size: 18px; font-weight: 600; color: var(--primary); }
-                        .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-                        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; font-family: inherit; transition: all 0.15s; text-decoration: none; }
-                        .btn-primary { background: var(--primary); color: #fff; }
-                        .btn-primary:hover { background: var(--primary-dark); }
-                        .btn-action { background: var(--action); color: #fff; }
-                        .btn-action:hover { background: var(--action-dark); }
-                        .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
-                        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-                        .page { padding: 28px; flex: 1; }
-                        .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
-                        .page-hero::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.05); }
-                        .page-hero h1 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 600; margin-bottom: 8px; position: relative; }
-                        .page-hero p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 500px; }
-                        .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-                        .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
-                        .search-wrap input { width: 100%; padding: 8px 12px 8px 36px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--bg-card); color: var(--text-primary); outline: none; transition: border 0.15s; }
-                        .search-wrap input:focus { border-color: var(--primary); }
-                        .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
-                        .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-                        .filter-pill { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
-                        .filter-pill.active, .filter-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-                        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
-                        .opp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; text-decoration: none; }
-                        .opp-card:hover { box-shadow: 0 4px 16px rgba(15,76,129,0.10); transform: translateY(-2px); }
-                        .opp-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
-                        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
-                        .badge-estagio { background: var(--estagio-bg); color: var(--estagio-tx); }
-                        .badge-posgrad { background: var(--posgrad-bg); color: var(--posgrad-tx); }
-                        .badge-evento { background: var(--evento-bg); color: var(--evento-tx); }
-                        .badge-suporte { background: var(--suporte-bg); color: var(--suporte-tx); }
-                        .company-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-                        .company-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-                        .company-name { font-size: 12px; color: var(--text-muted); }
-                        .opp-title { font-size: 14.5px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
-                        .opp-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-                        .opp-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); }
-                        .deadline { font-size: 11.5px; color: var(--text-muted); }
-                        .deadline strong { color: var(--text-primary); }
-                    </style>
-
-                    <div class="app">
-                        <aside class="sidebar">
-                            <div class="sidebar-logo"><div class="name">CRM Estudantil</div><div class="sub">Universidade Eduardo Mondlane</div></div>
-                            <nav>
-                                <div class="nav-section">Principal</div>
-                                <a class="nav-item active" href="/oportunidades"><span class="nav-icon">📋</span> Oportunidades</a>
-                                <a class="nav-item" href="/gestao-candidaturas"><span class="nav-icon">🗂️</span> Pipeline CRM</a>
-                                <div class="nav-section">Estudante</div>
-                                <a class="nav-item" href="/faq"><span class="nav-icon">💬</span> Suporte &amp; FAQ</a>
-                            </nav>
-                        </aside>
-                        <div class="main">
-                            <div class="topbar"><span class="topbar-title">Oportunidades</span></div>
-                            <div class="page">
+            <t t-call="crm_estudantil.crm_layout">
+                <t t-set="active_menu" t-value="'oportunidades'"/>
+                <t t-set="page_title" t-value="'Oportunidades'"/>
+                <t t-set="topbar_actions">
+                    <a href="/faq" class="btn btn-outline">💬 Suporte</a>
+                </t>
+                <t t-set="extra_css">
+                    .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
+                    .page-hero::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+                    .page-hero h1 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 600; margin-bottom: 8px; position: relative; }
+                    .page-hero p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 500px; }
+                    .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+                    .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+                    .search-wrap input { width: 100%; padding: 8px 12px 8px 36px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--bg-card); color: var(--text-primary); outline: none; transition: border 0.15s; }
+                    .search-wrap input:focus { border-color: var(--primary); }
+                    .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
+                    .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+                    .filter-pill { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
+                    .filter-pill.active, .filter-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+                    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+                    .opp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; text-decoration: none; }
+                    .opp-card:hover { box-shadow: 0 4px 16px rgba(15,76,129,0.10); transform: translateY(-2px); }
+                    .opp-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+                    .company-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+                    .company-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                    .company-name { font-size: 12px; color: var(--text-muted); }
+                    .opp-title { font-size: 14.5px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+                    .opp-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+                    .opp-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); }
+                    .deadline { font-size: 11.5px; color: var(--text-muted); }
+                    .deadline strong { color: var(--text-primary); }
+                </t>
                                 <div class="page-hero"><h1>Descobre Oportunidades para o teu Futuro</h1><p>Estágios, pós-graduações e eventos pensados para estudantes da UEM</p></div>
                                 <div class="filter-bar">
                                     <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="opp-search" placeholder="Pesquisa por área, empresa ou tipo..." oninput="filterCards()"/></div>
@@ -117,28 +70,23 @@
                                         </div>
                                     </t>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        let activeFilter = 'todos';
-                        function setFilter(el, tipo) { 
-                            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active')); 
-                            el.classList.add('active'); 
-                            activeFilter = tipo; 
-                            filterCards(); 
-                        }
-                        function filterCards() { 
-                            const q = document.getElementById('opp-search').value.toLowerCase(); 
-                            document.querySelectorAll('.opp-card').forEach(card => { 
-                                const matchTipo = activeFilter === 'todos' || card.dataset.tipo === activeFilter; 
-                                const matchQ = !q || card.dataset.search.toLowerCase().includes(q); 
-                                card.style.display = (matchTipo &amp;&amp; matchQ) ? '' : 'none'; 
-                            }); 
-                        }
-                    </script>
-                </div>
+                            <script>
+                                let activeFilter = 'todos';
+                                function setFilter(el, tipo) { 
+                                    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active')); 
+                                    el.classList.add('active'); 
+                                    activeFilter = tipo; 
+                                    filterCards(); 
+                                }
+                                function filterCards() { 
+                                    const q = document.getElementById('opp-search').value.toLowerCase(); 
+                                    document.querySelectorAll('.opp-card').forEach(card => { 
+                                        const matchTipo = activeFilter === 'todos' || card.dataset.tipo === activeFilter; 
+                                        const matchQ = !q || card.dataset.search.toLowerCase().includes(q); 
+                                        card.style.display = (matchTipo &amp;&amp; matchQ) ? '' : 'none'; 
+                                    }); 
+                                }
+                            </script>
             </t>
         </template>
     </data>
