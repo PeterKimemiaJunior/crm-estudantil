@@ -7,6 +7,7 @@
                 <t t-set="page_title" t-value="'Oportunidades'"/>
                 <t t-set="topbar_actions">
                     <a href="/faq" class="btn btn-outline">💬 Suporte</a>
+                    <a href="/criar-oportunidade" class="btn btn-action">➕ Nova Oportunidade</a>
                 </t>
                 <t t-set="extra_css">
                     .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
@@ -22,7 +23,7 @@
                     .filter-pill { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
                     .filter-pill.active, .filter-pill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
                     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
-                    .opp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; text-decoration: none; }
+                    .opp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; }
                     .opp-card:hover { box-shadow: 0 4px 16px rgba(15,76,129,0.10); transform: translateY(-2px); }
                     .opp-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
                     .company-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
@@ -33,60 +34,88 @@
                     .opp-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border); }
                     .deadline { font-size: 11.5px; color: var(--text-muted); }
                     .deadline strong { color: var(--text-primary); }
+                    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+                    .empty-state p { font-size: 15px; margin-bottom: 16px; }
                 </t>
-                                <div class="page-hero"><h1>Descobre Oportunidades para o teu Futuro</h1><p>Estágios, pós-graduações e eventos pensados para estudantes da UEM</p></div>
-                                <div class="filter-bar">
-                                    <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="opp-search" placeholder="Pesquisa por área, empresa ou tipo..." oninput="filterCards()"/></div>
-                                    <div class="filter-pills">
-                                        <button class="filter-pill active" onclick="setFilter(this,'todos')">Todos</button>
-                                        <button class="filter-pill" onclick="setFilter(this,'estagio')">Estágio</button>
-                                        <button class="filter-pill" onclick="setFilter(this,'posgraduacao')">Pós-Graduação</button>
-                                        <button class="filter-pill" onclick="setFilter(this,'evento')">Evento</button>
-                                        <button class="filter-pill" onclick="setFilter(this,'suporte')">Suporte</button>
-                                    </div>
+
+                <div class="page-hero">
+                    <h1>Descobre Oportunidades para o teu Futuro</h1>
+                    <p>Estágios, pós-graduações e eventos pensados para estudantes da UEM</p>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="opp-search" placeholder="Pesquisa por área, empresa ou tipo..." oninput="filterCards()"/>
+                    </div>
+                    <div class="filter-pills">
+                        <button class="filter-pill active" onclick="setFilter(this,'todos')">Todos</button>
+                        <button class="filter-pill" onclick="setFilter(this,'estagio')">Estágio</button>
+                        <button class="filter-pill" onclick="setFilter(this,'posgraduacao')">Pós-Graduação</button>
+                        <button class="filter-pill" onclick="setFilter(this,'evento')">Evento</button>
+                        <button class="filter-pill" onclick="setFilter(this,'suporte')">Suporte</button>
+                    </div>
+                </div>
+
+                <!-- CORRECÇÃO: opp é agora um dict, acesso com opp['chave'] -->
+                <div class="cards-grid" id="cards-grid">
+                    <t t-if="opportunities">
+                        <t t-foreach="opportunities" t-as="opp">
+                            <div class="opp-card"
+                                 t-att-data-tipo="opp['opportunity_type']"
+                                 t-att-data-search="opp['name'] + ' ' + opp['company_name'] + ' ' + (opp['description'] or '')">
+                                <div class="opp-card-top">
+                                    <span class="badge"
+                                          t-attf-class="badge-#{opp['opportunity_type']}">
+                                        <t t-if="opp['opportunity_type'] == 'estagio'">Estágio</t>
+                                        <t t-elif="opp['opportunity_type'] == 'posgraduacao'">Pós-Graduação</t>
+                                        <t t-elif="opp['opportunity_type'] == 'evento'">Evento</t>
+                                        <t t-else="">Suporte</t>
+                                    </span>
                                 </div>
-                                <div class="cards-grid" id="cards-grid">
-                                    <!-- Loop Dinâmico das Oportunidades -->
-                                    <t t-foreach="opportunities" t-as="opp">
-                                        <div class="opp-card" t-att-data-tipo="opp['opportunity_type']" t-att-data-search="opp['name'] + ' ' + (opp['description'] or '')">
-                                            <div class="opp-card-top">
-                                                <span class="badge" t-attf-class="badge-#{opp['opportunity_type']}">
-                                                    <t t-if="opp['opportunity_type'] == 'estagio'">Estágio</t>
-                                                    <t t-elif="opp['opportunity_type'] == 'posgraduacao'">Pós-Graduação</t>
-                                                    <t t-elif="opp['opportunity_type'] == 'evento'">Evento</t>
-                                                    <t t-else="">Suporte</t>
-                                                </span>
-                                            </div>
-                                            <div class="company-row">
-                                                <div class="company-dot" t-esc="opp['initials']">UE</div>
-                                                <span class="company-name" t-esc="opp['company_name']">Empresa</span>
-                                            </div>
-                                            <div class="opp-title" t-esc="opp['name']">Título da Oportunidade</div>
-                                            <div class="opp-desc" t-esc="opp['description']">Descrição da oportunidade...</div>
-                                            <div class="opp-footer">
-                                                <span class="deadline">Prazo: <strong t-esc="opp['create_date']">Data</strong></span>
-                                                <a t-attf-href="/candidatura?lead_id={{opp['id']}}" class="btn btn-action" style="font-size:12px;padding:5px 12px;">Candidatar →</a>
-                                            </div>
-                                        </div>
-                                    </t>
+                                <div class="company-row">
+                                    <div class="company-dot" t-esc="opp['initials']"/>
+                                    <span class="company-name" t-esc="opp['company_name']"/>
                                 </div>
-                            <script>
-                                let activeFilter = 'todos';
-                                function setFilter(el, tipo) { 
-                                    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active')); 
-                                    el.classList.add('active'); 
-                                    activeFilter = tipo; 
-                                    filterCards(); 
-                                }
-                                function filterCards() { 
-                                    const q = document.getElementById('opp-search').value.toLowerCase(); 
-                                    document.querySelectorAll('.opp-card').forEach(card => { 
-                                        const matchTipo = activeFilter === 'todos' || card.dataset.tipo === activeFilter; 
-                                        const matchQ = !q || card.dataset.search.toLowerCase().includes(q); 
-                                        card.style.display = (matchTipo &amp;&amp; matchQ) ? '' : 'none'; 
-                                    }); 
-                                }
-                            </script>
+                                <div class="opp-title" t-esc="opp['name']"/>
+                                <div class="opp-desc" t-esc="opp['description'] or 'Sem descrição.'"/>
+                                <div class="opp-footer">
+                                    <span class="deadline">Prazo: <strong t-esc="opp['deadline']"/></span>
+                                    <a t-attf-href="/candidatura?lead_id=#{opp['id']}"
+                                       class="btn btn-action"
+                                       style="font-size:12px;padding:5px 12px;">
+                                        Candidatar →
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="empty-state">
+                            <p>Ainda não há oportunidades disponíveis.</p>
+                            <a href="/criar-oportunidade" class="btn btn-primary">➕ Criar Oportunidade</a>
+                        </div>
+                    </t>
+                </div>
+
+                <script>
+                    let activeFilter = 'todos';
+                    function setFilter(el, tipo) {
+                        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                        el.classList.add('active');
+                        activeFilter = tipo;
+                        filterCards();
+                    }
+                    function filterCards() {
+                        const q = document.getElementById('opp-search').value.toLowerCase();
+                        document.querySelectorAll('.opp-card').forEach(card => {
+                            const matchTipo = activeFilter === 'todos' || card.dataset.tipo === activeFilter;
+                            const matchQ = !q || card.dataset.search.toLowerCase().includes(q);
+                            card.style.display = (matchTipo &amp;&amp; matchQ) ? '' : 'none';
+                        });
+                    }
+                </script>
+
             </t>
         </template>
     </data>

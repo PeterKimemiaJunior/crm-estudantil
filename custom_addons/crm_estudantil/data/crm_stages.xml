@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Este ficheiro é carregado UMA VEZ na instalação do módulo.
+    Cria os estágios necessários na tabela crm_stage do PostgreSQL.
+    O atributo noupdate="1" garante que atualizações do módulo
+    não sobrescrevem os dados se o gestor os tiver alterado.
+-->
+<odoo>
+<data noupdate="1">
+
+    <record id="stage_novo" model="crm.stage">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+        <field name="probability">10</field>
+        <field name="is_won" eval="False"/>
+    </record>
+
+    <record id="stage_analise" model="crm.stage">
+        <field name="name">Qualified</field>
+        <field name="sequence">2</field>
+        <field name="probability">30</field>
+        <field name="is_won" eval="False"/>
+    </record>
+
+    <record id="stage_aprovado" model="crm.stage">
+        <field name="name">Won</field>
+        <field name="sequence">3</field>
+        <field name="probability">100</field>
+        <field name="is_won" eval="True"/>
+    </record>
+
+    <record id="stage_rejeitado" model="crm.stage">
+        <field name="name">Lost</field>
+        <field name="sequence">4</field>
+        <field name="probability">0</field>
+        <field name="is_won" eval="False"/>
+    </record>
+
+</data>
+</odoo>

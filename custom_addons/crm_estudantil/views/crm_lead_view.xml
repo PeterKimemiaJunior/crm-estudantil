@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <!-- ============================================================
+         RF-01: Adicionar campos estudantis ao formulário crm.lead
+         Herda a vista principal do CRM (crm.crm_lead_all_leads)
+         ============================================================ -->
+    <record id="crm_lead_form_estudantil" model="ir.ui.view">
+        <field name="name">crm.lead.form.estudantil</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_all_leads"/>
+        <field name="arch" type="xml">
+
+            <!-- Injeta o novo separador "Dados Estudantis" após o separador "Extra Info" -->
+            <xpath expr="//page[@name='extra']" position="after">
+                <page string="Dados Estudantis" name="dados_estudantis">
+                    <group string="Identificação do Estudante">
+                        <field name="student_number"
+                               placeholder="Ex: 20231234"/>
+                        <field name="course"/>
+                        <field name="year"
+                               placeholder="Ex: 3"/>
+                    </group>
+                    <group string="Tipo de Oportunidade">
+                        <field name="opportunity_type"
+                               widget="radio"
+                               options="{'horizontal': true}"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- RF-03: Mostrar badge de tipo no topo do formulário,
+                 ao lado do nome da oportunidade -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="opportunity_type"
+                       widget="badge"
+                       decoration-info="opportunity_type == 'estagio'"
+                       decoration-primary="opportunity_type == 'posgraduacao'"
+                       decoration-warning="opportunity_type == 'evento'"
+                       decoration-success="opportunity_type == 'suporte'"
+                       readonly="1"
+                       nolabel="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         RF-02: Vista de lista do CRM com colunas estudantis
+         ============================================================ -->
+    <record id="crm_lead_tree_estudantil" model="ir.ui.view">
+        <field name="name">crm.lead.tree.estudantil</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_all_leads_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_from']" position="after">
+                <field name="student_number"
+                       string="Nº Estudante"
+                       optional="show"/>
+                <field name="course"
+                       string="Curso"
+                       optional="show"/>
+                <field name="year"
+                       string="Ano"
+                       optional="show"/>
+                <field name="opportunity_type"
+                       string="Tipo"
+                       optional="show"
+                       widget="badge"
+                       decoration-info="opportunity_type == 'estagio'"
+                       decoration-primary="opportunity_type == 'posgraduacao'"
+                       decoration-warning="opportunity_type == 'evento'"
+                       decoration-success="opportunity_type == 'suporte'"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         RF-03: Kanban do CRM com badge de tipo de oportunidade
+         Herda crm.crm_lead_kanban_view
+         ============================================================ -->
+    <record id="crm_lead_kanban_estudantil" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.estudantil</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Declara o campo para ficar disponível no kanban -->
+            <xpath expr="//kanban" position="inside">
+                <field name="opportunity_type"/>
+                <field name="student_number"/>
+                <field name="course"/>
+            </xpath>
+
+            <!-- Injeta o badge no card, antes do nome da oportunidade -->
+            <xpath expr="//div[hasclass('o_kanban_record_title')]" position="before">
+                <div class="mb-1">
+                    <!-- Badge colorido por tipo de oportunidade -->
+                    <span t-if="record.opportunity_type.value == 'estagio'"
+                          class="badge rounded-pill"
+                          style="background:#E6F1FB;color:#0F4C81;font-size:10px;font-weight:600;">
+                        🎓 Estágio
+                    </span>
+                    <span t-elif="record.opportunity_type.value == 'posgraduacao'"
+                          class="badge rounded-pill"
+                          style="background:#EEEDFE;color:#3C3489;font-size:10px;font-weight:600;">
+                        📚 Pós-Graduação
+                    </span>
+                    <span t-elif="record.opportunity_type.value == 'evento'"
+                          class="badge rounded-pill"
+                          style="background:#FFF3DC;color:#7A4F00;font-size:10px;font-weight:600;">
+                        📅 Evento
+                    </span>
+                    <span t-elif="record.opportunity_type.value == 'suporte'"
+                          class="badge rounded-pill"
+                          style="background:#EAF3DE;color:#27500A;font-size:10px;font-weight:600;">
+                        🤝 Suporte
+                    </span>
+                </div>
+            </xpath>
+
+            <!-- Injeta o número de estudante e curso no rodapé do card -->
+            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="inside">
+                <div t-if="record.student_number.value"
+                     style="font-size:11px;color:#5A6475;margin-top:4px;">
+                    <span>Nº </span>
+                    <span t-esc="record.student_number.value"/>
+                    <t t-if="record.course.value">
+                        <span> · </span>
+                        <span t-esc="record.course.value"/>
+                    </t>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         Filtros e Agrupamentos no Searchbar do CRM
+         ============================================================ -->
+    <record id="crm_lead_search_estudantil" model="ir.ui.view">
+        <field name="name">crm.lead.search.estudantil</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_lead_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+
+                <!-- Pesquisa por número de estudante -->
+                <field name="student_number"
+                       string="Nº Estudante"
+                       filter_domain="[('student_number','ilike',self)]"/>
+
+                <!-- Filtros rápidos por tipo -->
+                <separator/>
+                <filter string="Estágios"
+                        name="filter_estagio"
+                        domain="[('opportunity_type','=','estagio')]"/>
+                <filter string="Pós-Graduação"
+                        name="filter_posgrad"
+                        domain="[('opportunity_type','=','posgraduacao')]"/>
+                <filter string="Eventos"
+                        name="filter_evento"
+                        domain="[('opportunity_type','=','evento')]"/>
+                <filter string="Suporte"
+                        name="filter_suporte"
+                        domain="[('opportunity_type','=','suporte')]"/>
+
+                <!-- Agrupamento por tipo -->
+                <separator/>
+                <group expand="0" string="Agrupar por">
+                    <filter string="Tipo de Oportunidade"
+                            name="group_tipo"
+                            context="{'group_by':'opportunity_type'}"/>
+                    <filter string="Curso"
+                            name="group_curso"
+                            context="{'group_by':'course'}"/>
+                </group>
+
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- ============================================================
+         Menu de acesso rápido: "Candidaturas Estudantis"
+         Aparece no menu CRM como sub-item dedicado
+         ============================================================ -->
+    <record id="action_crm_candidaturas_estudantis" model="ir.actions.act_window">
+        <field name="name">Candidaturas Estudantis</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('student_number','!=',False)]</field>
+        <field name="context">{
+            'default_opportunity_type': 'estagio',
+            'default_type': 'lead'
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nenhuma candidatura ainda!
+            </p>
+            <p>
+                As candidaturas submetidas pelo website aparecem aqui
+                automaticamente.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_crm_candidaturas_estudantis"
+              name="Candidaturas Estudantis"
+              parent="crm.crm_menu_root"
+              action="action_crm_candidaturas_estudantis"
+              sequence="5"/>
+
+</data>
+</odoo>

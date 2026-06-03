@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- ================================================================
+     PORTAL CANDIDATURA — /portal/candidatura
+     ================================================================ -->
+<template id="portal_candidatura" name="Portal Estudante — Candidatura">
+    <t t-call="crm_estudantil.portal_layout">
+        <t t-set="portal_page" t-value="'candidatura'"/>
+        <t t-set="portal_css">
+            .cand-wrap { max-width: 680px; margin: 0 auto; }
+            .breadcrumb { font-size: 12.5px; color: var(--p-muted); margin-bottom: 20px; }
+            .breadcrumb a { color: var(--p-primary); text-decoration: none; }
+            .breadcrumb a:hover { text-decoration: underline; }
+
+            /* Banner da oportunidade seleccionada */
+            .ctx-banner {
+                background: var(--p-primary-light);
+                border-left: 4px solid var(--p-primary);
+                border-radius: 0 10px 10px 0;
+                padding: 14px 18px;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .ctx-banner .ctx-info strong { display: block; font-size: 14.5px; font-weight: 600; color: var(--p-primary); }
+            .ctx-banner .ctx-info span   { font-size: 12.5px; color: var(--p-muted); }
+            .ctx-banner-empty {
+                background: #FFF8E6;
+                border-left: 4px solid #BA7517;
+                border-radius: 0 10px 10px 0;
+                padding: 12px 18px;
+                margin-bottom: 24px;
+                font-size: 13.5px;
+                color: #7A4F00;
+            }
+
+            /* Card do formulário */
+            .form-card {
+                background: var(--p-card);
+                border: 1px solid var(--p-border);
+                border-radius: 14px;
+                padding: 32px;
+            }
+            .form-card h2 {
+                font-size: 21px;
+                font-weight: 700;
+                color: var(--p-primary);
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--p-border);
+            }
+            .sec-label {
+                font-size: 10.5px;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--p-muted);
+                font-weight: 700;
+                margin: 24px 0 14px;
+                padding-bottom: 6px;
+                border-bottom: 1px dashed var(--p-border);
+            }
+            .form-row { display: flex; gap: 16px; }
+            @media(max-width:560px) { .form-row { flex-direction: column; } }
+            .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; margin-bottom: 14px; }
+            .form-group label { font-size: 13px; font-weight: 500; color: var(--p-text); }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 9px 12px;
+                border: 1px solid var(--p-border);
+                border-radius: 6px;
+                font-size: 13.5px;
+                font-family: inherit;
+                color: var(--p-text);
+                outline: none;
+                transition: border .15s;
+                background: #fff;
+            }
+            .form-group input:focus,
+            .form-group select:focus,
+            .form-group textarea:focus {
+                border-color: var(--p-primary);
+                box-shadow: 0 0 0 3px rgba(15,76,129,0.08);
+            }
+            .form-group textarea { resize: vertical; min-height: 120px; }
+            .radio-group { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+            .radio-opt {
+                display: flex; align-items: center; gap: 6px;
+                padding: 6px 14px;
+                border: 1px solid var(--p-border);
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 13px;
+                transition: all .15s;
+            }
+            .radio-opt input { accent-color: var(--p-primary); }
+            .radio-opt:has(input:checked) {
+                border-color: var(--p-primary);
+                background: var(--p-primary-light);
+                color: var(--p-primary);
+                font-weight: 600;
+            }
+            .upload-zone {
+                border: 1.5px dashed var(--p-border);
+                border-radius: 8px;
+                padding: 24px;
+                text-align: center;
+                cursor: pointer;
+                transition: all .15s;
+                background: #FAFBFD;
+            }
+            .upload-zone:hover { border-color: var(--p-primary); background: var(--p-primary-light); }
+            .upload-zone p   { font-size: 13.5px; font-weight: 500; color: var(--p-text); margin-bottom: 4px; }
+            .upload-zone small { font-size: 12px; color: var(--p-muted); }
+            .privacy-row {
+                display: flex; gap: 10px;
+                align-items: flex-start;
+                margin-top: 10px;
+            }
+            .privacy-row input { accent-color: var(--p-primary); margin-top: 3px; flex-shrink: 0; }
+            .privacy-row label { font-size: 12.5px; color: var(--p-muted); line-height: 1.55; }
+            .form-actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 28px;
+                padding-top: 20px;
+                border-top: 1px solid var(--p-border);
+            }
+            .link-back { font-size: 13px; color: var(--p-primary); text-decoration: none; font-weight: 500; }
+            .link-back:hover { text-decoration: underline; }
+            .char-counter { text-align: right; font-size: 11.5px; color: var(--p-muted); margin-top: 4px; }
+
+            /* Estado de sucesso */
+            .success-box {
+                display: none;
+                background: var(--p-action-light);
+                border: 1px solid var(--p-action);
+                border-radius: 12px;
+                padding: 32px;
+                text-align: center;
+                margin-top: 24px;
+            }
+            .success-box .s-icon  { font-size: 40px; margin-bottom: 12px; }
+            .success-box h3 { font-size: 18px; color: var(--p-action-dark); margin-bottom: 8px; }
+            .success-box p  { font-size: 14px; color: var(--p-muted); margin-bottom: 20px; }
+        </t>
+
+        <div class="cand-wrap">
+            <div class="breadcrumb">
+                <a href="/portal">Início</a> ›
+                <a href="/portal/oportunidades">Oportunidades</a> ›
+                Candidatura
+            </div>
+
+            <!-- Banner: mostra a oportunidade se vier ?opp_id= -->
+            <t t-if="oportunidade">
+                <div class="ctx-banner">
+                    <span class="pbadge" t-attf-class="pbadge-#{oportunidade['opportunity_type']}">
+                        <t t-if="oportunidade['opportunity_type'] == 'estagio'">Estágio</t>
+                        <t t-elif="oportunidade['opportunity_type'] == 'posgraduacao'">Pós-Graduação</t>
+                        <t t-elif="oportunidade['opportunity_type'] == 'evento'">Evento</t>
+                        <t t-else="">Suporte</t>
+                    </span>
+                    <div class="ctx-info">
+                        <strong t-esc="oportunidade['name']"/>
+                        <span t-esc="oportunidade['company_name']"/>
+                        <span style="margin-left:8px;">· Prazo: <t t-esc="oportunidade['deadline']"/></span>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="ctx-banner-empty">
+                    💡 Não selecionaste uma oportunidade específica.
+                    Podes <a href="/portal/oportunidades" style="color:#7A4F00;font-weight:600;">escolher uma aqui</a>
+                    ou preenche o campo "Tipo" abaixo.
+                </div>
+            </t>
+
+            <!-- Formulário -->
+            <div class="form-card" id="form-card">
+                <h2>Formulário de Candidatura</h2>
+
+                <div class="sec-label">Dados Pessoais</div>
+                <div class="form-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" id="f-nome" placeholder="Ex: Ana Beatriz Machava"/>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Número de Estudante *</label>
+                        <input type="text" id="f-num" placeholder="Ex: 20231234"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Contacto (Telemóvel)</label>
+                        <input type="text" id="f-phone" placeholder="+258 84 000 0000"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Curso *</label>
+                        <select id="f-curso">
+                            <option value="">Selecciona o curso...</option>
+                            <option value="informatica">Engenharia Informática</option>
+                            <option value="gestao">Gestão</option>
+                            <option value="direito">Direito</option>
+                            <option value="medicina">Medicina</option>
+                            <option value="economia">Economia</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Institucional *</label>
+                        <input type="email" id="f-email" placeholder="nome@uem.ac.mz"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ano Curricular *</label>
+                    <div class="radio-group">
+                        <label class="radio-opt"><input type="radio" name="fano" value="1"/> 1.º Ano</label>
+                        <label class="radio-opt"><input type="radio" name="fano" value="2"/> 2.º Ano</label>
+                        <label class="radio-opt"><input type="radio" name="fano" value="3"/> 3.º Ano</label>
+                        <label class="radio-opt"><input type="radio" name="fano" value="4"/> 4.º Ano</label>
+                        <label class="radio-opt"><input type="radio" name="fano" value="5"/> 5.º Ano</label>
+                    </div>
+                </div>
+
+                <!-- Tipo (só aparece se não veio opp_id) -->
+                <t t-if="not oportunidade">
+                    <div class="form-group">
+                        <label>Tipo de Oportunidade *</label>
+                        <select id="f-tipo">
+                            <option value="estagio">Estágio</option>
+                            <option value="posgraduacao">Pós-Graduação</option>
+                            <option value="evento">Evento</option>
+                            <option value="suporte">Suporte</option>
+                        </select>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- tipo vem escondido da oportunidade -->
+                    <input type="hidden" id="f-tipo"
+                           t-att-value="oportunidade['opportunity_type']"/>
+                    <input type="hidden" id="f-opp-id"
+                           t-att-value="oportunidade['id']"/>
+                </t>
+
+                <div class="sec-label">Carta de Motivação</div>
+                <div class="form-group">
+                    <label>Descreve a tua motivação *</label>
+                    <textarea id="f-motiv"
+                              placeholder="Descreve a tua motivação, competências relevantes e o que esperas aprender..."
+                              oninput="updateCounter()"></textarea>
+                    <div class="char-counter" id="char-count">0 / 1000 caracteres</div>
+                </div>
+
+                <div class="sec-label">Documentos</div>
+                <div class="upload-zone" onclick="alert('Upload de ficheiro — funcionalidade a implementar.')">
+                    <p>📄 Arrasta o teu CV ou clica para seleccionar</p>
+                    <small>PDF ou Word — máx. 5MB</small>
+                </div>
+
+                <div class="privacy-row" style="margin-top:16px;">
+                    <input type="checkbox" id="f-privacy"/>
+                    <label for="f-privacy">
+                        Autorizo que os meus dados sejam partilhados com a entidade parceira
+                        para fins de recrutamento, nos termos da política de privacidade da UEM.
+                    </label>
+                </div>
+
+                <div class="form-actions" id="form-actions">
+                    <a href="/portal/oportunidades" class="link-back">← Voltar às Oportunidades</a>
+                    <button class="pbtn pbtn-action"
+                            style="padding:10px 28px;font-size:14.5px;"
+                            onclick="submitCandidatura()">
+                        Enviar Candidatura
+                    </button>
+                </div>
+
+                <!-- Mensagem de erro inline -->
+                <div id="form-error"
+                     style="display:none;background:#FAECE7;border:1px solid #D85A30;
+                            border-radius:8px;padding:12px 16px;margin-top:16px;
+                            font-size:13.5px;color:#7A2010;">
+                </div>
+            </div>
+
+            <!-- Caixa de sucesso (substitui o formulário) -->
+            <div class="success-box" id="success-box">
+                <div class="s-icon">✅</div>
+                <h3>Candidatura enviada com sucesso!</h3>
+                <p>
+                    A equipa académica da UEM irá analisar o teu pedido
+                    e contactar-te em breve por email institucional.
+                </p>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                    <a href="/portal/oportunidades" class="pbtn pbtn-primary">
+                        Ver mais Oportunidades
+                    </a>
+                    <a href="/portal" class="pbtn pbtn-outline">
+                        Voltar ao Início
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function updateCounter() {
+                const len = document.getElementById('f-motiv').value.length;
+                document.getElementById('char-count').textContent = len + ' / 1000 caracteres';
+            }
+
+            async function submitCandidatura() {
+                const btn = event.target;
+
+                // Validações frontend
+                const nome  = document.getElementById('f-nome').value.trim();
+                const num   = document.getElementById('f-num').value.trim();
+                const email = document.getElementById('f-email').value.trim();
+                const curso = document.getElementById('f-curso').value;
+                const ano   = document.querySelector('input[name="fano"]:checked')?.value;
+                const motiv = document.getElementById('f-motiv').value.trim();
+                const priv  = document.getElementById('f-privacy').checked;
+                const tipo  = document.getElementById('f-tipo')?.value || 'estagio';
+
+                if (!nome || !num || !email || !curso || !ano) {
+                    mostrarErro('Preenche todos os campos obrigatórios (*).');
+                    return;
+                }
+                if (!priv) {
+                    mostrarErro('Aceita a política de privacidade para continuar.');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'A enviar...';
+
+                try {
+                    const res = await fetch('/crm_estudantil/submit_lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0', method: 'call', id: 1,
+                            params: {
+                                name:             nome,
+                                email:            email,
+                                phone:            document.getElementById('f-phone').value.trim(),
+                                student_number:   num,
+                                course:           curso,
+                                year:             ano,
+                                opportunity_type: tipo,
+                                motivation:       motiv,
+                            }
+                        })
+                    });
+                    const json = await res.json();
+                    if (json.result?.success) {
+                        document.getElementById('form-card').style.display = 'none';
+                        document.getElementById('success-box').style.display = 'block';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        mostrarErro(json.result?.message || 'Erro ao enviar.');
+                    }
+                } catch {
+                    mostrarErro('Erro de ligação. Verifica a tua conexão e tenta novamente.');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Candidatura';
+                }
+            }
+
+            function mostrarErro(msg) {
+                const el = document.getElementById('form-error');
+                el.textContent = '⚠ ' + msg;
+                el.style.display = 'block';
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        </script>
+
+    </t>
+</template>
+
+
+<!-- ================================================================
+     PORTAL FAQ — /portal/faq
+     ================================================================ -->
+<template id="portal_faq" name="Portal Estudante — FAQ">
+    <t t-call="crm_estudantil.portal_layout">
+        <t t-set="portal_page" t-value="'faq'"/>
+        <t t-set="portal_css">
+            .faq-header { margin-bottom: 28px; }
+            .faq-header h1 { font-size: 26px; font-weight: 700; color: var(--p-text); margin-bottom: 6px; }
+            .faq-header p  { font-size: 14.5px; color: var(--p-muted); }
+            .search-bar { position: relative; max-width: 560px; margin-bottom: 20px; }
+            .search-bar input {
+                width: 100%; padding: 11px 14px 11px 40px;
+                border: 1.5px solid var(--p-border); border-radius: 8px;
+                font-size: 14px; font-family: inherit; outline: none; transition: border .15s;
+            }
+            .search-bar input:focus { border-color: var(--p-action); }
+            .search-bar .s-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--p-muted); }
+            .cat-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+            .cpill { padding: 5px 16px; border-radius: 20px; border: 1px solid var(--p-border);
+                background: #fff; font-size: 13px; cursor: pointer; color: var(--p-muted); transition: all .15s; font-family: inherit; }
+            .cpill.active, .cpill:hover { background: var(--p-primary); color: #fff; border-color: var(--p-primary); }
+            .faq-item {
+                background: var(--p-card); border: 1px solid var(--p-border);
+                border-radius: 10px; margin-bottom: 10px; overflow: hidden; transition: box-shadow .15s;
+            }
+            .faq-item:hover { box-shadow: 0 2px 10px rgba(15,76,129,0.08); }
+            .faq-q {
+                display: flex; align-items: center; gap: 12px;
+                padding: 14px 18px; cursor: pointer; user-select: none;
+            }
+            .faq-q .q-text { flex: 1; font-size: 14px; font-weight: 600; color: var(--p-text); }
+            .faq-q .chevron { color: var(--p-primary); font-size: 18px; transition: transform .2s; flex-shrink: 0; }
+            .faq-item.open .chevron { transform: rotate(180deg); }
+            .faq-a {
+                display: none; padding: 0 18px 16px;
+                font-size: 13.5px; color: var(--p-muted); line-height: 1.65;
+                border-top: 1px solid var(--p-border); padding-top: 12px;
+            }
+            .faq-item.open .faq-a { display: block; }
+            .cta-box {
+                border: 2px dashed var(--p-action); border-radius: 12px;
+                padding: 32px; text-align: center; margin-top: 36px;
+            }
+            .cta-box h3 { font-size: 16px; font-weight: 700; color: var(--p-text); margin-bottom: 8px; }
+            .cta-box p  { font-size: 14px; color: var(--p-muted); margin-bottom: 18px; }
+        </t>
+
+        <div class="faq-header">
+            <h1>Suporte Académico</h1>
+            <p>Encontra respostas às tuas dúvidas sobre candidaturas, prazos e documentos</p>
+        </div>
+
+        <div class="search-bar">
+            <span class="s-icon">🔍</span>
+            <input type="text" id="faq-search" placeholder="Pesquisa por palavra-chave..." oninput="filterFaq()"/>
+        </div>
+
+        <div class="cat-pills">
+            <button class="cpill active" data-cat="todos" onclick="setFaqCat(this)">Todos</button>
+            <button class="cpill" data-cat="Estágios"    onclick="setFaqCat(this)">Estágios</button>
+            <button class="cpill" data-cat="Inscrições"  onclick="setFaqCat(this)">Inscrições</button>
+            <button class="cpill" data-cat="Bolsas"      onclick="setFaqCat(this)">Bolsas</button>
+            <button class="cpill" data-cat="Regulamentos" onclick="setFaqCat(this)">Regulamentos</button>
+        </div>
+
+        <div id="faq-list">
+
+            <div class="faq-item" data-cat="Estágios">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-estagio">Estágios</span>
+                    <span class="q-text">Como me candidato a um estágio?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Acede à página de Oportunidades, escolhe a vaga e clica em "Candidatar →". Preenches o formulário online — sem precisar de te deslocar à secretaria.</div>
+            </div>
+
+            <div class="faq-item" data-cat="Estágios">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-estagio">Estágios</span>
+                    <span class="q-text">Posso candidatar-me a mais de um estágio ao mesmo tempo?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Sim. Cada candidatura é analisada de forma independente pela equipa académica.</div>
+            </div>
+
+            <div class="faq-item" data-cat="Inscrições">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge" style="background:#EEEDFE;color:#3C3489;">Inscrições</span>
+                    <span class="q-text">Que documentos são necessários para me candidatar?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Precisas de: CV actualizado (PDF ou Word, máx. 5MB) e carta de motivação preenchida no formulário. O teu número de estudante também é obrigatório.</div>
+            </div>
+
+            <div class="faq-item" data-cat="Inscrições">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge" style="background:#EEEDFE;color:#3C3489;">Inscrições</span>
+                    <span class="q-text">Em quanto tempo recebo resposta após submissão?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">A equipa analisa todas as candidaturas em até 10 dias úteis. Receberás uma notificação por email institucional.</div>
+            </div>
+
+            <div class="faq-item" data-cat="Bolsas">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-suporte">Bolsas</span>
+                    <span class="q-text">Como sei se tenho direito a uma bolsa de mérito?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">As bolsas de mérito são atribuídas a estudantes com média igual ou superior a 14 valores. Verifica os critérios na descrição de cada oportunidade do tipo "Suporte".</div>
+            </div>
+
+            <div class="faq-item" data-cat="Bolsas">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-suporte">Bolsas</span>
+                    <span class="q-text">As bolsas cobrem propinas e alojamento?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Depende do programa. Consulta os detalhes específicos de cada bolsa na página de Oportunidades, filtrando por "Suporte".</div>
+            </div>
+
+            <div class="faq-item" data-cat="Regulamentos">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-evento">Regulamentos</span>
+                    <span class="q-text">O que acontece se a minha candidatura for rejeitada?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Receberás um email com o motivo. Podes voltar a candidatar-te noutros ciclos ou contactar o gestor académico para obter feedback.</div>
+            </div>
+
+            <div class="faq-item" data-cat="Regulamentos">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span class="pbadge pbadge-evento">Regulamentos</span>
+                    <span class="q-text">Os meus dados são confidenciais?</span>
+                    <span class="chevron">▾</span>
+                </div>
+                <div class="faq-a">Sim. Os teus dados são tratados em conformidade com a política de privacidade da UEM e apenas partilhados com a entidade parceira que seleccionaste.</div>
+            </div>
+
+        </div>
+
+        <div class="cta-box">
+            <h3>Não encontraste a tua resposta?</h3>
+            <p>Fala directamente com a equipa académica da UEM.</p>
+            <a href="mailto:crm@uem.ac.mz" class="pbtn pbtn-action">📧 Enviar Email de Suporte</a>
+        </div>
+
+        <script>
+            let activeCat = 'todos';
+            function toggleFaq(el) { el.closest('.faq-item').classList.toggle('open'); }
+            function setFaqCat(el) {
+                document.querySelectorAll('.cpill').forEach(p => p.classList.remove('active'));
+                el.classList.add('active');
+                activeCat = el.dataset.cat;
+                filterFaq();
+            }
+            function filterFaq() {
+                const q = document.getElementById('faq-search').value.toLowerCase();
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    const catMatch = activeCat === 'todos' || item.dataset.cat === activeCat;
+                    const textMatch = !q || item.innerText.toLowerCase().includes(q);
+                    item.style.display = (catMatch &amp;&amp; textMatch) ? '' : 'none';
+                });
+            }
+        </script>
+
+    </t>
+</template>
+
+</data>
+</odoo>

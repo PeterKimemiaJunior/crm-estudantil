@@ -14,6 +14,10 @@
         'views/website_kanban.xml',
         'views/website_dashboard.xml',
         'views/gestao_candidaturas.xml',
+        'views/website_criar_oportunidades.xml',
+        'views/portal_layout.xml',
+        'views/portal_canditatura.xml',
+        'views/portal_oportunidades.xml',
     ],
     'assets': {
         'web.assets_frontend': [

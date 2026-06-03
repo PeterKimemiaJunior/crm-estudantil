@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- ================================================================
+     LAYOUT PÚBLICO — usado por todas as páginas do estudante
+     Não tem sidebar nem topbar de admin.
+     Rota base: /portal/*
+     ================================================================ -->
+<template id="portal_layout" name="Portal Estudante Layout">
+    <t t-call="website.layout">
+        <div style="min-height:100vh; background:#F4F7FB; font-family:'IBM Plex Sans',sans-serif;">
+
+            <style>
+                /* ── Reset ── */
+                *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+
+                /* ── Tokens ── */
+                :root {
+                    --p-primary:       #0F4C81;
+                    --p-primary-light: #E6F1FB;
+                    --p-action:        #1D9E75;
+                    --p-action-light:  #E1F5EE;
+                    --p-action-dark:   #0F6E56;
+                    --p-text:          #1A2B3C;
+                    --p-muted:         #5A6475;
+                    --p-border:        #DDE3EC;
+                    --p-bg:            #F4F7FB;
+                    --p-card:          #FFFFFF;
+                }
+
+                /* ── Navbar pública ── */
+                .pub-nav {
+                    background: var(--p-primary);
+                    height: 58px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 2rem;
+                    justify-content: space-between;
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+                }
+                .pub-nav-brand {
+                    display: flex;
+                    flex-direction: column;
+                    text-decoration: none;
+                }
+                .pub-nav-brand .brand-name {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #fff;
+                    letter-spacing: 0.01em;
+                    line-height: 1.2;
+                }
+                .pub-nav-brand .brand-sub {
+                    font-size: 10.5px;
+                    color: rgba(255,255,255,0.5);
+                    text-transform: uppercase;
+                    letter-spacing: 0.07em;
+                }
+                .pub-nav-links {
+                    display: flex;
+                    gap: 4px;
+                    align-items: center;
+                }
+                .pub-nav-link {
+                    color: rgba(255,255,255,0.75);
+                    text-decoration: none;
+                    padding: 6px 14px;
+                    border-radius: 6px;
+                    font-size: 13.5px;
+                    font-weight: 500;
+                    transition: background .15s, color .15s;
+                }
+                .pub-nav-link:hover,
+                .pub-nav-link.active {
+                    background: rgba(255,255,255,0.12);
+                    color: #fff;
+                    text-decoration: none;
+                }
+                .pub-nav-link.active {
+                    border-bottom: 2px solid var(--p-action);
+                }
+
+                /* ── Conteúdo ── */
+                .pub-body {
+                    max-width: 1100px;
+                    margin: 0 auto;
+                    padding: 36px 24px 60px;
+                }
+
+                /* ── Badges ── */
+                .pbadge {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 3px 10px;
+                    border-radius: 20px;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                }
+                .pbadge-estagio    { background:#E6F1FB; color:#0F4C81; }
+                .pbadge-posgraduacao { background:#EEEDFE; color:#3C3489; }
+                .pbadge-evento     { background:#FFF3DC; color:#7A4F00; }
+                .pbadge-suporte    { background:#EAF3DE; color:#27500A; }
+
+                /* ── Botões ── */
+                .pbtn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 8px 18px;
+                    border-radius: 6px;
+                    font-size: 13.5px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    border: none;
+                    text-decoration: none;
+                    transition: background .15s, transform .1s;
+                    font-family: inherit;
+                }
+                .pbtn:active { transform: scale(0.98); }
+                .pbtn-primary { background: var(--p-primary); color: #fff; }
+                .pbtn-primary:hover { background: #042C53; color:#fff; text-decoration:none; }
+                .pbtn-action  { background: var(--p-action);  color: #fff; }
+                .pbtn-action:hover  { background: var(--p-action-dark); color:#fff; text-decoration:none; }
+                .pbtn-outline { background: transparent; color: var(--p-primary); border: 1.5px solid var(--p-primary); }
+                .pbtn-outline:hover { background: var(--p-primary-light); text-decoration:none; }
+
+                /* ── Footer ── */
+                .pub-footer {
+                    background: #1A2B3C;
+                    color: rgba(255,255,255,0.5);
+                    font-size: 12.5px;
+                    padding: 16px 2rem;
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                .pub-footer a { color: rgba(255,255,255,0.5); text-decoration:none; }
+                .pub-footer a:hover { color:#fff; }
+
+                /* ── CSS extra injectado por cada página ── */
+                <t t-out="portal_css or ''"/>
+            </style>
+
+            <!-- Navbar -->
+            <nav class="pub-nav">
+                <a href="/portal" class="pub-nav-brand">
+                    <span class="brand-name">CRM Estudantil</span>
+                    <span class="brand-sub">Universidade Eduardo Mondlane</span>
+                </a>
+                <div class="pub-nav-links">
+                    <a href="/portal"
+                       t-attf-class="pub-nav-link #{'active' if portal_page == 'home' else ''}">
+                        Início
+                    </a>
+                    <a href="/portal/oportunidades"
+                       t-attf-class="pub-nav-link #{'active' if portal_page == 'oportunidades' else ''}">
+                        Oportunidades
+                    </a>
+                    <a href="/portal/faq"
+                       t-attf-class="pub-nav-link #{'active' if portal_page == 'faq' else ''}">
+                        Suporte
+                    </a>
+                    <a href="/portal/candidatura"
+                       class="pbtn pbtn-action"
+                       style="margin-left:8px; font-size:13px; padding:6px 16px;">
+                        Candidatar-se →
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Conteúdo da página -->
+            <div class="pub-body">
+                <t t-out="0"/>
+            </div>
+
+            <!-- Footer -->
+            <footer class="pub-footer">
+                <span>© 2026 Universidade Eduardo Mondlane — CRM Estudantil</span>
+                <span>
+                    <a href="/portal/faq">Suporte</a>
+                    &#160;·&#160;
+                    <a href="#">Política de Privacidade</a>
+                </span>
+            </footer>
+
+        </div>
+    </t>
+</template>
+
+</data>
+</odoo>

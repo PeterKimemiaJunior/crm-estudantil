@@ -11,6 +11,7 @@ services:
       - PASSWORD=odoo
     volumes:
       - ./custom_addons:/mnt/custom_addons:z
+      - ./odoo.conf:/etc/odoo/odoo.conf:ro        # ← monta o teu odoo.conf
       - odoo_data:/var/lib/odoo
     # MUITA ATENÇÃO A ESTA LINHA ABAIXO:
     command: odoo --addons-path=/mnt/custom_addons,/usr/lib/python3/dist-packages/odoo/addons -i base,crm,website,survey,website_crm,crm_estudantil --dev=reload
