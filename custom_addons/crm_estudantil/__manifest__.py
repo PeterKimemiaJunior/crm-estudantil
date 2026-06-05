@@ -18,6 +18,9 @@
         'views/portal_layout.xml',
         'views/portal_canditatura.xml',
         'views/portal_oportunidades.xml',
+        'views/gestao_oportunidades.xml',
+        'views/website_oportunidade_detalhe.xml',
+        'views/website_questionarios.xml',
     ],
     'assets': {
         'web.assets_frontend': [

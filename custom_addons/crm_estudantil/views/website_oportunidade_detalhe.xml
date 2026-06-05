@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- ================================================================
+     DETALHE DE OPORTUNIDADE — /oportunidades/<id>
+     Lista todos os candidatos desta oportunidade
+     ================================================================ -->
+<template id="page_oportunidade_detalhe" name="Detalhe da Oportunidade">
+    <t t-call="crm_estudantil.crm_layout">
+        <t t-set="active_menu" t-value="'oportunidades'"/>
+        <t t-set="page_title" t-value="oportunidade.name"/>
+        <t t-set="topbar_actions">
+            <a href="/oportunidades" class="btn btn-outline">← Voltar</a>
+        </t>
+        <t t-set="extra_css">
+            .breadcrumb { font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px; }
+            .breadcrumb a { color: var(--primary); text-decoration: none; }
+            .breadcrumb a:hover { text-decoration: underline; }
+
+            /* Cabeçalho da oportunidade */
+            .opp-header {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 24px 28px;
+                margin-bottom: 24px;
+                display: flex;
+                gap: 24px;
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+            .opp-header-main { flex: 1; }
+            .opp-header-main h2 {
+                font-family: 'Source Serif 4', serif;
+                font-size: 22px; font-weight: 700;
+                color: var(--primary); margin-bottom: 8px;
+            }
+            .opp-meta-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+            .opp-meta-item { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+            .opp-meta-item strong { color: var(--text-primary); }
+            .opp-desc { font-size: 13.5px; color: var(--text-muted); margin-top: 12px; line-height: 1.6; }
+            .opp-stats { display: flex; flex-direction: column; gap: 8px; min-width: 140px; }
+            .opp-stat-box {
+                background: var(--bg-page);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 10px 16px;
+                text-align: center;
+            }
+            .opp-stat-num { font-size: 26px; font-weight: 700; color: var(--primary); line-height: 1; }
+            .opp-stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+            /* Barra de filtros e pesquisa */
+            .cand-toolbar {
+                display: flex; align-items: center; gap: 10px;
+                margin-bottom: 16px; flex-wrap: wrap;
+            }
+            .cand-search { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+            .cand-search input {
+                width: 100%; padding: 8px 12px 8px 34px;
+                border: 1px solid var(--border); border-radius: 6px;
+                font-size: 13px; font-family: inherit; outline: none; transition: border .15s;
+                background: var(--bg-card);
+            }
+            .cand-search input:focus { border-color: var(--primary); }
+            .cand-search .si { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
+            .stage-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+            .spill {
+                padding: 5px 14px; border-radius: 20px; font-size: 12px;
+                border: 1px solid var(--border); background: var(--bg-card);
+                color: var(--text-muted); cursor: pointer; font-family: inherit; transition: all .15s;
+            }
+            .spill.active, .spill:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+            .cand-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+            /* Tabela de candidatos */
+            .cand-table-wrap {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            .cand-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+            .cand-table th {
+                text-align: left; padding: 11px 16px;
+                font-size: 11px; font-weight: 700;
+                text-transform: uppercase; letter-spacing: 0.06em;
+                color: var(--text-muted); background: var(--bg-page);
+                border-bottom: 1px solid var(--border);
+            }
+            .cand-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+            .cand-table tr:last-child td { border-bottom: none; }
+            .cand-table tr { transition: background .1s; cursor: pointer; }
+            .cand-table tr:hover td { background: #F8FAFD; }
+            .cand-name { font-weight: 600; color: var(--text-primary); }
+            .cand-nr   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+            .stage-badge {
+                display: inline-flex; align-items: center; padding: 3px 10px;
+                border-radius: 20px; font-size: 11.5px; font-weight: 600;
+            }
+            .stage-novo      { background: #E6F1FB; color: #0F4C81; }
+            .stage-analise   { background: #EEEDFE; color: #3C3489; }
+            .stage-aprovado  { background: #E1F5EE; color: #0F6E56; }
+            .stage-rejeitado { background: #FAECE7; color: #993C1D; }
+            .action-btn {
+                padding: 5px 12px; border-radius: 6px; font-size: 12px;
+                font-weight: 500; border: none; cursor: pointer;
+                font-family: inherit; transition: opacity .15s; color: #fff;
+            }
+            .action-btn:hover { opacity: 0.85; }
+            .empty-row td { text-align: center; padding: 48px; color: var(--text-muted); font-size: 14px; }
+        </t>
+
+        <div class="breadcrumb">
+            <a href="/oportunidades">Oportunidades</a> › <span t-esc="oportunidade.name"/>
+        </div>
+
+        <!-- Cabeçalho da oportunidade -->
+        <div class="opp-header">
+            <div class="opp-header-main">
+                <span class="badge"
+                      t-attf-class="badge badge-#{oportunidade.opportunity_type}">
+                    <t t-if="oportunidade.opportunity_type == 'estagio'">Estágio</t>
+                    <t t-elif="oportunidade.opportunity_type == 'posgraduacao'">Pós-Graduação</t>
+                    <t t-elif="oportunidade.opportunity_type == 'evento'">Evento</t>
+                    <t t-else="">Suporte</t>
+                </span>
+                <h2 t-esc="oportunidade.name"/>
+                <div class="opp-meta-row">
+                    <div class="opp-meta-item">
+                        🏢 <strong t-esc="oportunidade.company_name or 'UEM'"/>
+                    </div>
+                    <div class="opp-meta-item">
+                        📅 Prazo: <strong t-esc="oportunidade.deadline.strftime('%d %b %Y') if oportunidade.deadline else '—'"/>
+                    </div>
+                    <div class="opp-meta-item">
+                        🟢 <strong t-esc="'Activa' if oportunidade.active else 'Inactiva'"/>
+                    </div>
+                </div>
+                <div class="opp-desc" t-esc="oportunidade.description or 'Sem descrição.'"/>
+            </div>
+            <div class="opp-stats">
+                <div class="opp-stat-box">
+                    <div class="opp-stat-num" t-esc="total_candidaturas"/>
+                    <div class="opp-stat-lbl">Candidatos</div>
+                </div>
+                <div class="opp-stat-box">
+                    <div class="opp-stat-num" style="color:#1D9E75;" t-esc="total_aprovados"/>
+                    <div class="opp-stat-lbl">Aprovados</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="cand-toolbar">
+            <div class="cand-search">
+                <span class="si">🔍</span>
+                <input type="text" id="cand-search"
+                       placeholder="Pesquisar candidato..."
+                       oninput="filterCandidatos()"/>
+            </div>
+            <div class="stage-pills">
+                <button class="spill active" data-stage="todos" onclick="setStage(this)">Todos</button>
+                <button class="spill" data-stage="novo"      onclick="setStage(this)">Novo</button>
+                <button class="spill" data-stage="analise"   onclick="setStage(this)">Em Análise</button>
+                <button class="spill" data-stage="aprovado"  onclick="setStage(this)">Aprovado</button>
+                <button class="spill" data-stage="rejeitado" onclick="setStage(this)">Rejeitado</button>
+            </div>
+            <span class="cand-count" id="cand-count">
+                <t t-esc="total_candidaturas"/> candidato(s)
+            </span>
+        </div>
+
+        <!-- Tabela de candidatos -->
+        <div class="cand-table-wrap">
+            <table class="cand-table">
+                <thead>
+                    <tr>
+                        <th>Candidato</th>
+                        <th>Curso</th>
+                        <th>Ano</th>
+                        <th>Email</th>
+                        <th>Data</th>
+                        <th>Estado</th>
+                        <th>Acções</th>
+                    </tr>
+                </thead>
+                <tbody id="cand-tbody">
+                    <t t-if="candidatos">
+                        <t t-foreach="candidatos" t-as="c">
+                            <tr t-att-data-stage="c['stage_key']"
+                                t-att-data-search="c['nome'] + ' ' + c['numero'] + ' ' + c['email']"
+                                onclick="window.location='/oportunidades/candidato/' + this.dataset.id"
+                                t-att-data-id="c['id']">
+                                <td>
+                                    <div class="cand-name" t-esc="c['nome']"/>
+                                    <div class="cand-nr">Nº <t t-esc="c['numero']"/></div>
+                                </td>
+                                <td t-esc="c['curso_label']"/>
+                                <td t-esc="c['ano'] or '—'"/>
+                                <td t-esc="c['email']"/>
+                                <td t-esc="c['data']"/>
+                                <td>
+                                    <span class="stage-badge"
+                                          t-attf-class="stage-badge stage-#{c['stage_key']}">
+                                        <t t-esc="c['stage_label']"/>
+                                    </span>
+                                </td>
+                                <td onclick="event.stopPropagation()">
+                                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                                        <t t-if="c['stage_key'] == 'novo'">
+                                            <button class="action-btn" style="background:#534AB7;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;analise&quot;)'">
+                                                Análise
+                                            </button>
+                                            <button class="action-btn" style="background:#1D9E75;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;aprovado&quot;)'">
+                                                Aprovar
+                                            </button>
+                                            <button class="action-btn" style="background:#D85A30;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;rejeitado&quot;)'">
+                                                Rejeitar
+                                            </button>
+                                        </t>
+                                        <t t-elif="c['stage_key'] == 'analise'">
+                                            <button class="action-btn" style="background:#1D9E75;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;aprovado&quot;)'">
+                                                Aprovar
+                                            </button>
+                                            <button class="action-btn" style="background:#D85A30;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;rejeitado&quot;)'">
+                                                Rejeitar
+                                            </button>
+                                        </t>
+                                        <t t-else="">
+                                            <button class="action-btn" style="background:#5A6475;"
+                                                    t-att-onclick="'moverCandidato(' + str(c['id']) + ', &quot;novo&quot;)'">
+                                                ↺ Repor
+                                            </button>
+                                        </t>
+                                        <a class="action-btn" style="background:#0F4C81;text-decoration:none;"
+                                           t-attf-href="/oportunidades/candidato/#{c['id']}">
+                                            Ver
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <tr class="empty-row"><td colspan="7">📭 Ainda não há candidatos para esta oportunidade.</td></tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            let activeStage = 'todos';
+
+            function setStage(el) {
+                document.querySelectorAll('.spill').forEach(p => p.classList.remove('active'));
+                el.classList.add('active');
+                activeStage = el.dataset.stage;
+                filterCandidatos();
+            }
+
+            function filterCandidatos() {
+                const q = document.getElementById('cand-search').value.toLowerCase();
+                const rows = document.querySelectorAll('#cand-tbody tr[data-stage]');
+                let visible = 0;
+                rows.forEach(row => {
+                    const stageMatch = activeStage === 'todos' || row.dataset.stage === activeStage;
+                    const searchMatch = !q || row.dataset.search.toLowerCase().includes(q);
+                    const show = stageMatch &amp;&amp; searchMatch;
+                    row.style.display = show ? '' : 'none';
+                    if (show) visible++;
+                });
+                document.getElementById('cand-count').textContent = visible + ' candidato(s)';
+            }
+
+            function moverCandidato(leadId, stage) {
+                fetch('/api/candidaturas/move', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', method: 'call', id: 1,
+                        params: { lead_id: leadId, target_stage: stage }
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.result &amp;&amp; data.result.success) {
+                        location.reload();
+                    } else {
+                        alert('Erro: ' + (data.result ? data.result.message : 'Falha'));
+                    }
+                });
+            }
+        </script>
+
+    </t>
+</template>
+
+
+<!-- ================================================================
+     DETALHE DE CANDIDATO — /oportunidades/candidato/<id>
+     Ficha completa do candidato com todas as informações
+     ================================================================ -->
+<template id="page_candidato_detalhe" name="Detalhe do Candidato">
+    <t t-call="crm_estudantil.crm_layout">
+        <t t-set="active_menu" t-value="'oportunidades'"/>
+        <t t-set="page_title" t-value="'Ficha do Candidato'"/>
+        <t t-set="topbar_actions">
+            <a t-attf-href="/oportunidades/#{candidato['opp_id']}" class="btn btn-outline">
+                ← Voltar à Oportunidade
+            </a>
+        </t>
+        <t t-set="extra_css">
+            .breadcrumb { font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px; }
+            .breadcrumb a { color: var(--primary); text-decoration: none; }
+            .breadcrumb a:hover { text-decoration: underline; }
+            .ficha-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; align-items: start; }
+            @media(max-width:860px) { .ficha-grid { grid-template-columns: 1fr; } }
+            .ficha-card {
+                background: var(--bg-card); border: 1px solid var(--border);
+                border-radius: 12px; padding: 24px 28px; margin-bottom: 16px;
+            }
+            .ficha-card h3 {
+                font-size: 13px; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.08em; color: var(--text-muted);
+                margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+            }
+            .ficha-avatar {
+                width: 64px; height: 64px; border-radius: 50%;
+                background: var(--primary); color: #fff;
+                font-size: 22px; font-weight: 700;
+                display: flex; align-items: center; justify-content: center;
+                margin-bottom: 16px;
+            }
+            .ficha-nome { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+            .ficha-sub  { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+            .info-row { display: flex; flex-direction: column; gap: 12px; }
+            .info-item { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+            .info-label { font-size: 12.5px; color: var(--text-muted); flex-shrink: 0; }
+            .info-value { font-size: 13.5px; font-weight: 500; color: var(--text-primary); text-align: right; }
+            .motivacao-text {
+                font-size: 13.5px; color: var(--text-primary);
+                line-height: 1.7; white-space: pre-wrap;
+                background: var(--bg-page); border-radius: 8px;
+                padding: 14px; border: 1px solid var(--border);
+            }
+            .opp-ref-card {
+                background: var(--primary-light);
+                border: 1px solid #C5DCF2;
+                border-radius: 10px; padding: 16px;
+                margin-bottom: 16px;
+            }
+            .opp-ref-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
+            .opp-ref-name  { font-size: 14px; font-weight: 600; color: var(--primary); }
+            .opp-ref-sub   { font-size: 12px; color: #3A6A9A; margin-top: 3px; }
+            .estado-card {
+                background: var(--bg-card); border: 1px solid var(--border);
+                border-radius: 10px; padding: 16px; margin-bottom: 16px;
+            }
+            .estado-card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 700; margin-bottom: 12px; }
+            .stage-badge-lg {
+                display: flex; align-items: center; justify-content: center;
+                padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 700;
+                margin-bottom: 14px;
+            }
+            .stage-novo      { background: #E6F1FB; color: #0F4C81; }
+            .stage-analise   { background: #EEEDFE; color: #3C3489; }
+            .stage-aprovado  { background: #E1F5EE; color: #0F6E56; }
+            .stage-rejeitado { background: #FAECE7; color: #993C1D; }
+            .action-stack { display: flex; flex-direction: column; gap: 8px; }
+            .action-full {
+                width: 100%; padding: 9px; border-radius: 6px; font-size: 13px;
+                font-weight: 600; border: none; cursor: pointer; font-family: inherit;
+                color: #fff; transition: opacity .15s; text-align: center;
+            }
+            .action-full:hover { opacity: 0.85; }
+        </t>
+
+        <div class="breadcrumb">
+            <a href="/oportunidades">Oportunidades</a> ›
+            <a t-attf-href="/oportunidades/#{candidato['opp_id']}"
+               t-esc="candidato['opp_nome']"/>
+            › <span t-esc="candidato['nome']"/>
+        </div>
+
+        <div class="ficha-grid">
+
+            <!-- Coluna principal -->
+            <div>
+                <!-- Dados pessoais -->
+                <div class="ficha-card">
+                    <div class="ficha-avatar">
+                        <t t-esc="candidato['initials']"/>
+                    </div>
+                    <div class="ficha-nome" t-esc="candidato['nome']"/>
+                    <div class="ficha-sub">Nº <t t-esc="candidato['numero']"/> · <t t-esc="candidato['curso_label']"/></div>
+
+                    <h3>Dados Pessoais</h3>
+                    <div class="info-row">
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value" t-esc="candidato['email']"/>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Telefone</span>
+                            <span class="info-value" t-esc="candidato['phone'] or '—'"/>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Curso</span>
+                            <span class="info-value" t-esc="candidato['curso_label']"/>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Ano Curricular</span>
+                            <span class="info-value">
+                                <t t-esc="str(candidato['ano']) + '.º Ano'" t-if="candidato['ano']"/>
+                                <t t-else="">—</t>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Data de Candidatura</span>
+                            <span class="info-value" t-esc="candidato['data']"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carta de motivação -->
+                <div class="ficha-card">
+                    <h3>Carta de Motivação</h3>
+                    <t t-if="candidato['motivacao']">
+                        <div class="motivacao-text" t-esc="candidato['motivacao']"/>
+                    </t>
+                    <t t-else="">
+                        <p style="color:var(--text-muted);font-size:13.5px;">
+                            O candidato não submeteu carta de motivação.
+                        </p>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Coluna lateral -->
+            <div>
+                <!-- Oportunidade associada -->
+                <div class="opp-ref-card">
+                    <div class="opp-ref-label">Oportunidade</div>
+                    <div class="opp-ref-name" t-esc="candidato['opp_nome']"/>
+                    <div class="opp-ref-sub"  t-esc="candidato['opp_empresa']"/>
+                    <div style="margin-top:10px;">
+                        <a class="btn btn-primary btn-sm"
+                           style="font-size:12px;padding:5px 12px;"
+                           t-attf-href="/oportunidades/#{candidato['opp_id']}">
+                            Ver todos os candidatos →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Estado actual e acções -->
+                <div class="estado-card">
+                    <h3>Estado da Candidatura</h3>
+                    <div class="stage-badge-lg"
+                         t-attf-class="stage-badge-lg stage-#{candidato['stage_key']}">
+                        <t t-esc="candidato['stage_label']"/>
+                    </div>
+                    <div class="action-stack" t-att-data-id="candidato['id']">
+                        <t t-if="candidato['stage_key'] != 'analise' and candidato['stage_key'] != 'aprovado'">
+                            <button class="action-full" style="background:#534AB7;"
+                                    t-att-onclick="'mover(' + str(candidato['id']) + ', &quot;analise&quot;)'">
+                                → Mover para Análise
+                            </button>
+                        </t>
+                        <t t-if="candidato['stage_key'] != 'aprovado'">
+                            <button class="action-full" style="background:#1D9E75;"
+                                    t-att-onclick="'mover(' + str(candidato['id']) + ', &quot;aprovado&quot;)'">
+                                ✓ Aprovar Candidatura
+                            </button>
+                        </t>
+                        <t t-if="candidato['stage_key'] != 'rejeitado'">
+                            <button class="action-full" style="background:#D85A30;"
+                                    t-att-onclick="'mover(' + str(candidato['id']) + ', &quot;rejeitado&quot;)'">
+                                ✗ Rejeitar Candidatura
+                            </button>
+                        </t>
+                        <t t-if="candidato['stage_key'] != 'novo'">
+                            <button class="action-full" style="background:#5A6475;"
+                                    t-att-onclick="'mover(' + str(candidato['id']) + ', &quot;novo&quot;)'">
+                                ↺ Repor para Novo
+                            </button>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function mover(leadId, stage) {
+                const btns = document.querySelectorAll('.action-full');
+                btns.forEach(b => b.disabled = true);
+
+                fetch('/api/candidaturas/move', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0', method: 'call', id: 1,
+                        params: { lead_id: leadId, target_stage: stage }
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.result &amp;&amp; data.result.success) {
+                        location.reload();
+                    } else {
+                        alert('Erro: ' + (data.result ? data.result.message : 'Falha'));
+                        btns.forEach(b => b.disabled = false);
+                    }
+                });
+            }
+        </script>
+
+    </t>
+</template>
+
+</data>
+</odoo>

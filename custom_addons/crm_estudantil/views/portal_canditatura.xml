@@ -340,6 +340,10 @@
                 btn.textContent = 'A enviar...';
 
                 try {
+                    // Lê o oportunidade_id do campo hidden injectado pelo QWeb
+                    const oppIdEl = document.getElementById('f-opp-id');
+                    const oppId   = oppIdEl ? parseInt(oppIdEl.value) || null : null;
+
                     const res = await fetch('/crm_estudantil/submit_lead', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -354,6 +358,7 @@
                                 year:             ano,
                                 opportunity_type: tipo,
                                 motivation:       motiv,
+                                oportunidade_id:  oppId,   // ← CORRECÇÃO: liga candidatura à oportunidade
                             }
                         })
                     });

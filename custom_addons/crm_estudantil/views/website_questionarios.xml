@@ -1,0 +1,53 @@
+<odoo>
+
+    <template id="page_questionarios">
+
+        <t t-call="crm_estudantil.crm_layout">
+
+            <t t-set="page_title"
+               t-value="'Questionários'"/>
+
+            <div class="container mt-4">
+
+                <h2>Questionários Disponíveis</h2>
+
+                <div class="row">
+
+                    <t t-foreach="surveys"
+                       t-as="survey">
+
+                        <div class="col-md-6 mb-3">
+
+                            <div class="card">
+
+                                <div class="card-body">
+
+                                    <h5 t-esc="survey.title"/>
+
+                                    <p t-esc="survey.description"/>
+
+                                    <a
+                                        t-att-href="survey.public_url"
+                                        class="btn btn-primary">
+
+                                        Responder
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </t>
+
+                </div>
+
+            </div>
+
+        </t>
+
+    </template>
+
+</odoo>
