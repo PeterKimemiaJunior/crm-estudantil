@@ -1,53 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
+        <template id="page_questionarios" name="Questionários">
+            <t t-call="crm_estudantil.crm_layout">
+                <t t-set="active_menu" t-value="'questionarios'"/>
+                <t t-set="page_title" t-value="'Questionários'"/>
+                <t t-set="topbar_actions">
+                    <a href="/oportunidades" class="btn btn-outline">← Oportunidades</a>
+                </t>
+                <t t-set="extra_css">
+                    /* Hero */
+                    .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
+                    .page-hero::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+                    .page-hero h1 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 600; margin-bottom: 8px; position: relative; }
+                    .page-hero p { font-size: 14px; color: rgba(255,255,255,0.75); max-width: 500px; }
+                    /* Search */
+                    .search-wrap { position: relative; max-width: 380px; margin-bottom: 24px; }
+                    .search-wrap input { width: 100%; padding: 9px 12px 9px 38px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--bg-card); color: var(--text-primary); outline: none; transition: border 0.15s; }
+                    .search-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,76,129,0.08); }
+                    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+                    /* Grid */
+                    .q-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+                    /* Card */
+                    .q-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow 0.2s, transform 0.2s; }
+                    .q-card:hover { box-shadow: 0 4px 18px rgba(15,76,129,0.10); transform: translateY(-2px); }
+                    .q-card-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--primary-light); color: var(--primary); font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+                    .q-card-header { display: flex; align-items: center; gap: 12px; }
+                    .q-card-title { font-size: 14.5px; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+                    .q-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+                    .q-card-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
+                    /* Empty state */
+                    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+                    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+                    .empty-state p { font-size: 15px; }
+                </t>
 
-    <template id="page_questionarios">
-
-        <t t-call="crm_estudantil.crm_layout">
-
-            <t t-set="page_title"
-               t-value="'Questionários'"/>
-
-            <div class="container mt-4">
-
-                <h2>Questionários Disponíveis</h2>
-
-                <div class="row">
-
-                    <t t-foreach="surveys"
-                       t-as="survey">
-
-                        <div class="col-md-6 mb-3">
-
-                            <div class="card">
-
-                                <div class="card-body">
-
-                                    <h5 t-esc="survey.title"/>
-
-                                    <p t-esc="survey.description"/>
-
-                                    <a
-                                        t-att-href="survey.public_url"
-                                        class="btn btn-primary">
-
-                                        Responder
-
-                                    </a>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </t>
-
+                <!-- Hero Banner -->
+                <div class="page-hero">
+                    <h1>📝 Questionários Disponíveis</h1>
+                    <p>Responde aos questionários da UEM e contribui para a melhoria dos programas académicos.</p>
                 </div>
 
-            </div>
+                <!-- Search -->
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="q-search" placeholder="Pesquisa por título..." oninput="filterQuestionarios()"/>
+                </div>
 
-        </t>
+                <!-- Cards Grid -->
+                <div class="q-grid" id="q-grid">
+                    <t t-if="surveys">
+                        <t t-foreach="surveys" t-as="survey">
+                            <div class="q-card"
+                                 t-att-data-search="survey.title + ' ' + (survey.description or '')">
+                                <div class="q-card-header">
+                                    <div class="q-card-icon">📋</div>
+                                    <div class="q-card-title" t-esc="survey.title"/>
+                                </div>
+                                <div class="q-card-desc"
+                                     t-esc="survey.description or 'Sem descrição disponível.'"/>
+                                <div class="q-card-footer">
+                                    <a t-att-href="'/survey/start/%s' % survey.access_token"
+                                       class="btn btn-action"
+                                       style="font-size:13px;padding:7px 18px;">
+                                        Responder →
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-icon">📭</div>
+                            <p>Ainda não há questionários disponíveis.</p>
+                        </div>
+                    </t>
+                </div>
 
-    </template>
+                <script>
+                    function filterQuestionarios() {
+                        const q = document.getElementById('q-search').value.toLowerCase();
+                        document.querySelectorAll('.q-card').forEach(card => {
+                            const match = !q || (card.dataset.search || '').toLowerCase().includes(q);
+                            card.style.display = match ? '' : 'none';
+                        });
+                    }
+                </script>
 
+            </t>
+        </template>
+    </data>
 </odoo>

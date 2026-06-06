@@ -1,5 +1,8 @@
+
 # crm_estudantil/controllers/portal.py
+# pyrefly: ignore [missing-import]
 from odoo import http
+# pyrefly: ignore [missing-import]
 from odoo.http import request
 from datetime import date
 

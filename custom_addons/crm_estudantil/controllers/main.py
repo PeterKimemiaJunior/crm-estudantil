@@ -1,4 +1,6 @@
+# pyrefly: ignore [missing-import]
 from odoo import http
+# pyrefly: ignore [missing-import]
 from odoo.http import request
 import json
 

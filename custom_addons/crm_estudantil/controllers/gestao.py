@@ -7,7 +7,7 @@ import json
 
 class GestaoCandidaturasController(http.Controller):
 
-    @http.route('/gestao-candidaturas', type='http', auth='user', website=True)
+    @http.route('/gestao/candidaturas', type='http', auth='user', website=True)
     def gestao_candidaturas(self, **kwargs):
         # Ler todas as candidaturas criadas pelo formulário (filtradas por student_number)
         leads = request.env['crm.lead'].sudo().search([

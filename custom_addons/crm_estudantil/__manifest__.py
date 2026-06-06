@@ -6,7 +6,10 @@
     'description': """Módulo base.""",
     'author': 'Grupo 1 - Engenharia Informática UEM',
     'depends': ['crm', 'website', 'survey'],
+    'license': 'LGPL-3',
     'data': [
+        'security/ir.model.access.csv',
+        'wizard/crm_survey_wizard_view.xml',
         'views/website_layout.xml',
         'views/website_oportunidades.xml',
         'views/website_candidatura.xml',
