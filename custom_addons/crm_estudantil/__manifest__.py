@@ -23,6 +23,7 @@
         'views/portal_oportunidades.xml',
         'views/gestao_oportunidades.xml',
         'views/website_oportunidade_detalhe.xml',
+        'views/gestao_home.xml',
         'views/website_questionarios.xml',
     ],
     'assets': {

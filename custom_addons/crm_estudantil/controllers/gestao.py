@@ -35,6 +35,43 @@ class GestaoCandidaturasController(http.Controller):
             'total': len(leads)
         })
 
+    @http.route('/gestao', type='http', auth='user', website=True)
+    def gestao_home(self, **kwargs):
+        # Overview dashboard for management
+        oportunidades = request.env['crm.oportunidades'].sudo().search([('active', '=', True)], limit=0)
+        all_opps = request.env['crm.oportunidades'].sudo().search([], order='create_date desc')
+        leads = request.env['crm.lead'].sudo().search([('type', '=', 'lead')])
+
+        total_opps = len(all_opps)
+        active_opps = len([o for o in all_opps if o.active])
+        total_cands = len(leads)
+
+        # counts por estágio
+        stage_names = ['New', 'Qualified', 'Proposition', 'Won', 'Lost']
+        stages_count = {}
+        for name in stage_names:
+            stages_count[name] = len(leads.filtered(lambda l, n=name: l.stage_id and l.stage_id.name == n))
+
+        # recentes oportunidades (últimas 5)
+        recent = []
+        for op in all_opps[:5]:
+            empresa = op.company_name or 'UEM'
+            recent.append({
+                'id': op.id,
+                'name': op.name,
+                'company_name': empresa,
+                'deadline': op.deadline.strftime('%d %b %Y') if op.deadline else '—',
+                'total_candidaturas': len(op.candidaturas_ids),
+            })
+
+        return request.render('crm_estudantil.page_gestao_home', {
+            'total_opps': total_opps,
+            'active_opps': active_opps,
+            'total_cands': total_cands,
+            'stages_count': stages_count,
+            'recent_opps': recent,
+        })
+
     @http.route('/api/candidaturas/move', type='json', auth='user')
     def move_candidatura(self, lead_id, target_stage):
         try:
