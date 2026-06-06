@@ -41,7 +41,7 @@ class CrmEstudantilController(http.Controller):
 
             from .validators import (
                 sanitize_text, sanitize_phone, validate_email,
-                sanitize_choice, safe_int, safe_id
+                sanitize_choice, safe_int, safe_id, validate_phone
             )
 
             # required fields
@@ -59,7 +59,11 @@ class CrmEstudantilController(http.Controller):
                 return {'success': False, 'message': 'Email inválido.'}
             email = sanitize_text(email_raw, max_len=120)
 
-            phone = sanitize_phone(params.get('phone'), max_len=32)
+            phone_raw = str(params.get('phone', '')).strip()
+            if phone_raw:
+                if not validate_phone(phone_raw):
+                    return {'success': False, 'message': 'Telefone inválido (formato Moçambique).'}
+            phone = sanitize_phone(phone_raw, max_len=32)
             num = sanitize_text(params.get('student_number'), max_len=20)
 
             allowed_courses = {'informatica', 'gestao', 'direito', 'medicina', 'economia', 'outro'}
