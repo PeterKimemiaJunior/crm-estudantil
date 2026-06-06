@@ -29,15 +29,15 @@ O **CRM Estudantil** é uma plataforma que conecta dois mundos:
 
 ## Stack Tecnológica
 
-| Camada | Tecnologia |
-|--------|-----------|
-| Infraestrutura | Docker 24+, Docker Compose v2 |
-| Base de Dados | PostgreSQL 15 (contentor `db`) |
-| Backend / ORM | Python 3.10, Odoo 17.0 |
-| Templates / Vistas | QWeb (XML) |
+| Camada               | Tecnologia                          |
+| -------------------- | ----------------------------------- |
+| Infraestrutura       | Docker 24+, Docker Compose v2       |
+| Base de Dados        | PostgreSQL 15 (contentor `db`)      |
+| Backend / ORM        | Python 3.10, Odoo 17.0              |
+| Templates / Vistas   | QWeb (XML)                          |
 | Frontend Interactivo | JavaScript (fetch/AJAX, DOM nativo) |
-| Estilos | SCSS / CSS (variáveis CSS custom) |
-| Questionários | Módulo nativo `survey` do Odoo |
+| Estilos              | SCSS / CSS (variáveis CSS custom)   |
+| Questionários        | Módulo nativo `survey` do Odoo      |
 
 ---
 
@@ -86,6 +86,7 @@ odoo_project/
 ## Como Correr
 
 ### Pré-requisitos
+
 - Docker Engine 24+
 - Docker Compose v2
 
@@ -107,11 +108,11 @@ O sistema fica disponível em **http://localhost:8069**
 
 ### Credenciais de Acesso (Backend Odoo)
 
-| Campo | Valor |
-|-------|-------|
-| URL | http://localhost:8069/web |
-| Utilizador | `admin` |
-| Password | `admin` |
+| Campo      | Valor                     |
+| ---------- | ------------------------- |
+| URL        | http://localhost:8069/web |
+| Utilizador | `admin`                   |
+| Password   | `admin`                   |
 
 ### Comandos Úteis
 
@@ -144,29 +145,29 @@ O Odoo usa **PostgreSQL** e mapeia automaticamente classes Python em tabelas SQL
 
 #### `crm.oportunidades` → tabela `crm_oportunidades`
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `name` | Char | Título da oportunidade |
-| `company_name` | Char | Empresa/entidade |
-| `description` | Text | Descrição detalhada |
-| `opportunity_type` | Selection | `estagio` / `posgraduacao` / `evento` / `suporte` |
-| `deadline` | Date | Prazo de candidatura |
-| `active` | Boolean | Se está activa (visível no site) |
-| `candidaturas_ids` | One2many → `crm.lead` | Candidatos ligados |
-| `total_candidaturas` | Integer (computed) | Contagem automática de candidatos |
+| Campo                | Tipo                  | Descrição                                         |
+| -------------------- | --------------------- | ------------------------------------------------- |
+| `name`               | Char                  | Título da oportunidade                            |
+| `company_name`       | Char                  | Empresa/entidade                                  |
+| `description`        | Text                  | Descrição detalhada                               |
+| `opportunity_type`   | Selection             | `estagio` / `posgraduacao` / `evento` / `suporte` |
+| `deadline`           | Date                  | Prazo de candidatura                              |
+| `active`             | Boolean               | Se está activa (visível no site)                  |
+| `candidaturas_ids`   | One2many → `crm.lead` | Candidatos ligados                                |
+| `total_candidaturas` | Integer (computed)    | Contagem automática de candidatos                 |
 
 #### `crm.lead` (extensão) → tabela `crm_lead`
 
 Campos adicionados ao modelo nativo do Odoo:
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `student_number` | Char | Número de estudante UEM |
-| `opportunity_type` | Selection | Tipo da candidatura |
-| `course` | Selection | Curso do estudante |
-| `year` | Integer | Ano curricular |
-| `oportunidade_id` | Many2one → `crm.oportunidades` | Vaga a que se candidatou |
-| `color` | Integer (computed) | Cor no Kanban (por tipo) |
+| Campo              | Tipo                           | Descrição                |
+| ------------------ | ------------------------------ | ------------------------ |
+| `student_number`   | Char                           | Número de estudante UEM  |
+| `opportunity_type` | Selection                      | Tipo da candidatura      |
+| `course`           | Selection                      | Curso do estudante       |
+| `year`             | Integer                        | Ano curricular           |
+| `oportunidade_id`  | Many2one → `crm.oportunidades` | Vaga a que se candidatou |
+| `color`            | Integer (computed)             | Cor no Kanban (por tipo) |
 
 ### Diagrama de Relacionamento
 
@@ -184,10 +185,10 @@ crm_oportunidades (1) ──────── (N) crm_lead
 
 ### Tabelas do Módulo `survey` (nativo Odoo)
 
-| Tabela | Descrição |
-|--------|-----------|
-| `survey_survey` | Questionários criados |
-| `survey_question` | Perguntas de cada questionário |
+| Tabela              | Descrição                                    |
+| ------------------- | -------------------------------------------- |
+| `survey_survey`     | Questionários criados                        |
+| `survey_question`   | Perguntas de cada questionário               |
 | `survey_user_input` | Respostas individuais (uma por participante) |
 
 ### Inspecção Directa via SQL
@@ -208,42 +209,42 @@ SELECT title FROM survey_survey WHERE active = true;
 
 ### 🌐 Páginas Públicas (sem login)
 
-| Rota | Descrição | View |
-|------|-----------|------|
-| `GET /oportunidades` | Listagem de vagas activas com filtros por tipo e pesquisa | `page_oportunidades` |
-| `GET /oportunidades/<id>` | Detalhe de uma oportunidade específica | `page_oportunidade_detalhe` |
-| `GET /candidatura[?lead_id=X]` | Formulário de candidatura (pré-preenchido se `lead_id` passado) | `page_candidatura` |
-| `GET /faq` | Suporte académico e perguntas frequentes com filtro JS | `page_faq` |
-| `GET /dashboard` | Dashboard de resumo das oportunidades | `page_dashboard` |
-| `GET /kanban` | Vista Kanban das oportunidades | `page_kanban` |
-| `GET /criar-oportunidade` | Formulário de criação de nova oportunidade | `page_criar_oportunidade` |
-| `GET /questionarios` | Listagem dos questionários disponíveis | `page_questionarios` |
+| Rota                           | Descrição                                                       | View                        |
+| ------------------------------ | --------------------------------------------------------------- | --------------------------- |
+| `GET /oportunidades`           | Listagem de vagas activas com filtros por tipo e pesquisa       | `page_oportunidades`        |
+| `GET /oportunidades/<id>`      | Detalhe de uma oportunidade específica                          | `page_oportunidade_detalhe` |
+| `GET /candidatura[?lead_id=X]` | Formulário de candidatura (pré-preenchido se `lead_id` passado) | `page_candidatura`          |
+| `GET /faq`                     | Suporte académico e perguntas frequentes com filtro JS          | `page_faq`                  |
+| `GET /dashboard`               | Dashboard de resumo das oportunidades                           | `page_dashboard`            |
+| `GET /kanban`                  | Vista Kanban das oportunidades                                  | `page_kanban`               |
+| `GET /criar-oportunidade`      | Formulário de criação de nova oportunidade                      | `page_criar_oportunidade`   |
+| `GET /questionarios`           | Listagem dos questionários disponíveis                          | `page_questionarios`        |
 
 ### 🔒 Páginas de Gestão (requerem login Odoo)
 
-| Rota | Descrição | View |
-|------|-----------|------|
-| `GET /gestao/oportunidades` | Lista de oportunidades com contagem de candidatos | `page_gestao_oportunidades` |
-| `GET /gestao/oportunidades/<id>` | Detalhe da oportunidade com lista de candidatos | `page_gestao_oportunidade_detalhe` |
-| `GET /gestao/candidatos/<id>` | Perfil completo de um candidato | `page_gestao_candidato_detalhe` |
-| `GET /gestao/candidaturas` | Kanban de todas as candidaturas por estágio | `page_gestao_candidaturas` |
+| Rota                             | Descrição                                         | View                               |
+| -------------------------------- | ------------------------------------------------- | ---------------------------------- |
+| `GET /gestao/oportunidades`      | Lista de oportunidades com contagem de candidatos | `page_gestao_oportunidades`        |
+| `GET /gestao/oportunidades/<id>` | Detalhe da oportunidade com lista de candidatos   | `page_gestao_oportunidade_detalhe` |
+| `GET /gestao/candidatos/<id>`    | Perfil completo de um candidato                   | `page_gestao_candidato_detalhe`    |
+| `GET /gestao/candidaturas`       | Kanban de todas as candidaturas por estágio       | `page_gestao_candidaturas`         |
 
 ### 🎓 Portal do Estudante (rotas alternativas públicas)
 
-| Rota | Descrição |
-|------|-----------|
-| `GET /portal` | Página de entrada do portal estudantil |
-| `GET /portal/oportunidades` | Oportunidades na vista portal |
-| `GET /portal/candidatura` | Formulário de candidatura na vista portal |
-| `GET /portal/faq` | FAQ na vista portal |
+| Rota                        | Descrição                                 |
+| --------------------------- | ----------------------------------------- |
+| `GET /portal`               | Página de entrada do portal estudantil    |
+| `GET /portal/oportunidades` | Oportunidades na vista portal             |
+| `GET /portal/candidatura`   | Formulário de candidatura na vista portal |
+| `GET /portal/faq`           | FAQ na vista portal                       |
 
 ### ⚙️ API Endpoints (JSON-RPC)
 
-| Rota | Método | Descrição |
-|------|--------|-----------|
+| Rota                          | Método | Descrição                                               |
+| ----------------------------- | ------ | ------------------------------------------------------- |
 | `/crm_estudantil/submit_lead` | `POST` | Submete uma candidatura (chamado pelo JS do formulário) |
-| `/api/oportunidades/create` | `POST` | Cria uma nova oportunidade |
-| `/api/candidaturas/move` | `POST` | Move candidatura entre estágios (Kanban drag-and-drop) |
+| `/api/oportunidades/create`   | `POST` | Cria uma nova oportunidade                              |
+| `/api/candidaturas/move`      | `POST` | Move candidatura entre estágios (Kanban drag-and-drop)  |
 
 ---
 
@@ -259,11 +260,11 @@ docker compose exec -T web python3 /tmp/seed_runner.py
 
 ### Dados Inseridos pelo Seed
 
-| Entidade | Quantidade | Detalhes |
-|----------|-----------|----------|
-| Oportunidades | 8 | 3 estágios, 2 pós-graduações, 2 eventos, 1 suporte |
-| Candidatos | 13 | Estudantes de Informática, Gestão, Direito, Economia |
-| Questionários | 3 | Activos e acessíveis publicamente |
+| Entidade      | Quantidade | Detalhes                                             |
+| ------------- | ---------- | ---------------------------------------------------- |
+| Oportunidades | 8          | 3 estágios, 2 pós-graduações, 2 eventos, 1 suporte   |
+| Candidatos    | 13         | Estudantes de Informática, Gestão, Direito, Economia |
+| Questionários | 3          | Activos e acessíveis publicamente                    |
 
 ---
 
@@ -271,33 +272,34 @@ docker compose exec -T web python3 /tmp/seed_runner.py
 
 ### ✅ Requisitos Implementados
 
-| Ref. | Requisito | Estado |
-|------|-----------|--------|
-| RF-01 | Campos `student_number`, `course`, `year` no `crm.lead` | ✅ Implementado |
-| RF-02 | Campo `opportunity_type` (Estágio/Pós-Grad./Evento/Suporte) | ✅ Implementado |
-| RF-03 | Pipeline Kanban com cores por tipo de oportunidade | ✅ Implementado (campo `color` computado) |
-| RF-04 | Página pública de Oportunidades | ✅ Implementado (`/oportunidades`) |
-| RF-05 | Formulário interactivo de candidatura | ✅ Implementado (`/candidatura`) |
-| RF-06 | Submissão via JavaScript/AJAX sem reload | ✅ Implementado (`fetch` + JSON-RPC) |
-| RF-07 | Criação automática de `crm.lead` com estado "Novo" | ✅ Implementado |
-| RF-08 | Página de Suporte/FAQ | ✅ Implementado (`/faq`) |
-| RF-09 | Filtro de pesquisa interactivo no FAQ | ✅ Implementado |
-| RF-10 | Integração com módulo nativo `survey` | ✅ Implementado (`/questionarios`) |
-| RF-11 | Gestor gera link de questionário e envia por email para contactos do CRM | ✅ Implementado (via Wizard no backend) |
-| RNF-01 | Sistema executado via Docker Compose | ✅ Implementado |
-| RNF-04 | Código apenas em `custom_addons/crm_estudantil/` | ✅ Respeitado |
+| Ref.   | Requisito                                                                | Estado                                    |
+| ------ | ------------------------------------------------------------------------ | ----------------------------------------- |
+| RF-01  | Campos `student_number`, `course`, `year` no `crm.lead`                  | ✅ Implementado                           |
+| RF-02  | Campo `opportunity_type` (Estágio/Pós-Grad./Evento/Suporte)              | ✅ Implementado                           |
+| RF-03  | Pipeline Kanban com cores por tipo de oportunidade                       | ✅ Implementado (campo `color` computado) |
+| RF-04  | Página pública de Oportunidades                                          | ✅ Implementado (`/oportunidades`)        |
+| RF-05  | Formulário interactivo de candidatura                                    | ✅ Implementado (`/candidatura`)          |
+| RF-06  | Submissão via JavaScript/AJAX sem reload                                 | ✅ Implementado (`fetch` + JSON-RPC)      |
+| RF-07  | Criação automática de `crm.lead` com estado "Novo"                       | ✅ Implementado                           |
+| RF-08  | Página de Suporte/FAQ                                                    | ✅ Implementado (`/faq`)                  |
+| RF-09  | Filtro de pesquisa interactivo no FAQ                                    | ✅ Implementado                           |
+| RF-10  | Integração com módulo nativo `survey`                                    | ✅ Implementado (`/questionarios`)        |
+| RF-11  | Gestor gera link de questionário e envia por email para contactos do CRM | ✅ Implementado (via Wizard no backend)   |
+| RNF-01 | Sistema executado via Docker Compose                                     | ✅ Implementado                           |
+| RNF-04 | Código apenas em `custom_addons/crm_estudantil/`                         | ✅ Respeitado                             |
 
 ### ⚠️ Requisitos Parcialmente Implementados
 
-| Ref. | Requisito | Lacuna |
-|------|-----------|--------|
-| RNF-02 | Hot-reload (`--dev=reload`) | ⚠️ A flag está configurada no `docker-compose.yml`, mas alterações em XML **exigem** atualização manual do módulo (`-u crm_estudantil`) para que o Odoo recarregue as views da BD. O hot-reload cobre apenas ficheiros Python e assets estáticos. |
+| Ref.   | Requisito                                               | Lacuna                                                                                                                                                                                                                                                  |
+| ------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| RNF-02 | Hot-reload (`--dev=reload`)                             | ⚠️ A flag está configurada no `docker-compose.yml`, mas alterações em XML **exigem** atualização manual do módulo (`-u crm_estudantil`) para que o Odoo recarregue as views da BD. O hot-reload cobre apenas ficheiros Python e assets estáticos.       |
 | RNF-03 | Formulário público com validação e sanitização de input | ⚠️ Existe validação no frontend (JavaScript), mas a **validação server-side** no controlador Python é mínima — verifica apenas se `nome` e `email` foram passados, sem sanitização robusta contra injecção ou validação de formato de email no backend. |
 
 ### ❌ Problemas e Dívida Técnica Identificados
 
 **1. Duplicação de rotas e vistas**
 Existem dois conjuntos de rotas para funcionalidades idênticas:
+
 - `/oportunidades` e `/portal/oportunidades` — ambas listam oportunidades para o estudante
 - `/candidatura` e `/portal/candidatura` — ambas servem o formulário de candidatura
 - `/faq` e `/portal/faq` — duplicado
@@ -318,13 +320,22 @@ A view original de questionários usava `survey.public_url`, um atributo que nã
 
 ### 📊 Pontuação Global (estimativa honesta)
 
-| Critério | Peso | Nota |
-|----------|------|------|
-| Cobertura dos RF do SRS | 30% | 9/10 — 11 de 11 RF implementados |
-| Qualidade técnica do código | 25% | 7/10 — Funciona, código backend agora possui wizards adequados |
-| UI/UX (consistência e design) | 20% | 8/10 — Design system coeso, dark sidebar, animações |
-| Segurança | 15% | 5/10 — Validação server-side fraca, rotas admin públicas |
-| Manutenibilidade | 10% | 6/10 — Duplicação de código, typos, manifest incompleto |
-| **Total** | **100%** | **~7.5/10** |
+| Critério                      | Peso     | Nota                                                           |
+| ----------------------------- | -------- | -------------------------------------------------------------- |
+| Cobertura dos RF do SRS       | 30%      | 9/10 — 11 de 11 RF implementados                               |
+| Qualidade técnica do código   | 25%      | 7/10 — Funciona, código backend agora possui wizards adequados |
+| UI/UX (consistência e design) | 20%      | 8/10 — Design system coeso, dark sidebar, animações            |
+| Segurança                     | 15%      | 5/10 — Validação server-side fraca, rotas admin públicas       |
+| Manutenibilidade              | 10%      | 6/10 — Duplicação de código, typos, manifest incompleto        |
+| **Total**                     | **100%** | **~7.5/10**                                                    |
 
 > **Conclusão:** O projecto demonstra uma compreensão sólida da arquitectura Odoo (ORM, QWeb, controllers, assets) e entrega um produto visualmente apelativo com as funcionalidades core do SRS. As principais fragilidades estão na segurança das rotas de administração, na duplicação de código entre as rotas `/portal/*` e as raiz, e na ausência de validação server-side robusta. Para uma versão de produção, estas questões seriam prioritárias.
+
+---
+
+**Segurança e Validação (RNF-03)**
+
+- Implementação recente: foi adicionada validação e sanitização server-side nos controladores para cumprir RNF-03. As mudanças incluem a criação do módulo `custom_addons/crm_estudantil/controllers/validators.py` com helpers (`sanitize_text`, `validate_email`, `sanitize_phone`, `sanitize_choice`, `safe_int`, `safe_id`) e a utilização desses helpers em `main.py` e `gestao.py` para filtrar/validar dados antes de escrever na BD.
+- Relatório técnico: veja `docs/RNF-03-report.md` para um resumo das validações aplicadas e instruções de teste.
+
+

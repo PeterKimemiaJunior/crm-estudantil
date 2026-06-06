@@ -4,6 +4,7 @@ from odoo import http
 # pyrefly: ignore [missing-import]
 from odoo.http import request
 import json
+from .validators import safe_id, sanitize_choice
 
 class GestaoCandidaturasController(http.Controller):
 
@@ -37,7 +38,11 @@ class GestaoCandidaturasController(http.Controller):
     @http.route('/api/candidaturas/move', type='json', auth='user')
     def move_candidatura(self, lead_id, target_stage):
         try:
-            lead = request.env['crm.lead'].sudo().browse(int(lead_id))
+            lead_pk = safe_id(lead_id)
+            if not lead_pk:
+                return {'success': False, 'message': 'ID de candidatura inválido'}
+
+            lead = request.env['crm.lead'].sudo().browse(lead_pk)
             if not lead.exists():
                 return {'success': False, 'message': 'Candidatura não encontrada'}
 
@@ -48,8 +53,13 @@ class GestaoCandidaturasController(http.Controller):
                 'aprovado': 'Won',
                 'rejeitado': 'Lost'
             }
-            target_name = stage_map.get(target_stage, 'New')
-            
+
+            allowed = set(stage_map.keys())
+            stage_key = sanitize_choice(target_stage, allowed, default=None)
+            if stage_key is None:
+                return {'success': False, 'message': 'Estado de destino inválido'}
+
+            target_name = stage_map.get(stage_key, 'New')
             # Procurar estágio correspondente
             stage = request.env['crm.stage'].sudo().search([
                 ('name', '=', target_name),

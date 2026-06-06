@@ -39,40 +39,49 @@ class CrmEstudantilController(http.Controller):
             payload = json.loads(request.httprequest.data.decode('utf-8'))
             params = payload.get('params', {})
 
+            from .validators import (
+                sanitize_text, sanitize_phone, validate_email,
+                sanitize_choice, safe_int, safe_id
+            )
+
+            # required fields
             campos_obrigatorios = {
                 'name': 'Nome', 'email': 'Email',
                 'student_number': 'Número de Estudante', 'course': 'Curso',
             }
             for campo, label in campos_obrigatorios.items():
-                if not params.get(campo, '').strip():
+                if not str(params.get(campo, '')).strip():
                     return {'success': False, 'message': f'Campo obrigatório em falta: {label}'}
 
-            nome  = params['name'].strip()[:120]
-            email = params['email'].strip()[:120]
-            phone = params.get('phone', '').strip()[:32]
-            num   = params.get('student_number', '').strip()[:20]
-            curso = params.get('course', 'outro')
-            ano   = int(params['year']) if str(params.get('year', '')).isdigit() else 0
-            motiv = params.get('motivation', '').strip()[:2000]
+            nome = sanitize_text(params.get('name'), max_len=120)
+            email_raw = params.get('email')
+            if not validate_email(email_raw):
+                return {'success': False, 'message': 'Email inválido.'}
+            email = sanitize_text(email_raw, max_len=120)
+
+            phone = sanitize_phone(params.get('phone'), max_len=32)
+            num = sanitize_text(params.get('student_number'), max_len=20)
+
+            allowed_courses = {'informatica', 'gestao', 'direito', 'medicina', 'economia', 'outro'}
+            curso = sanitize_choice(params.get('course'), allowed_courses, default='outro')
+
+            ano = safe_int(params.get('year'), default=0, min_value=0, max_value=2100)
+            motiv = sanitize_text(params.get('motivation'), max_len=2000)
 
             # Busca a oportunidade se vier oportunidade_id
             oportunidade = None
-            tipo = params.get('opportunity_type', 'estagio')
-            try:
-                opp_id_raw = params.get('oportunidade_id')
-                if opp_id_raw and int(opp_id_raw) > 0:
-                    rec = request.env['crm.oportunidades'].sudo().browse(int(opp_id_raw))
-                    if rec.exists():
-                        oportunidade = rec
-                        tipo = rec.opportunity_type
-            except (ValueError, TypeError):
-                pass
+            allowed_types = {'estagio', 'posgraduacao', 'evento', 'suporte'}
+            tipo = sanitize_choice(params.get('opportunity_type'), allowed_types, default='estagio')
+            opp_id = safe_id(params.get('oportunidade_id'))
+            if opp_id:
+                rec = request.env['crm.oportunidades'].sudo().browse(opp_id)
+                if rec.exists():
+                    oportunidade = rec
+                    tipo = sanitize_choice(rec.opportunity_type, allowed_types, default=tipo)
 
             stage = request.env['crm.stage'].sudo().search([('name', '=', 'New')], limit=1)
 
-            # --------------------------------------------------------
-            # INSERT: cria a candidatura e liga à oportunidade
-            # --------------------------------------------------------
+            # CREATE: cria a candidatura e liga à oportunidade
             request.env['crm.lead'].sudo().create({
                 'name':             f'Candidatura: {nome}',
                 'contact_name':     nome,
@@ -90,8 +99,8 @@ class CrmEstudantilController(http.Controller):
 
             return {'success': True, 'message': 'Candidatura registada com sucesso!'}
 
-        except Exception as e:
-            return {'success': False, 'message': f'Erro interno: {str(e)}'}
+        except Exception:
+            return {'success': False, 'message': 'Erro interno no servidor.'}
 
     @http.route('/faq', type='http', auth='public', website=True)
     def faq(self, **kwargs):
