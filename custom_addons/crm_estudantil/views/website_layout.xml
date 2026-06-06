@@ -74,6 +74,12 @@
                                 <a t-attf-class="nav-item #{'active' if active_menu == 'dashboard' else ''}" href="/dashboard">
                                     <span class="nav-icon">📊</span> Dashboard
                                 </a>
+                                <a t-attf-class="nav-item #{'active' if active_menu == 'gestao' else ''}" href="/gestao">
+                                    <span class="nav-icon">🏠</span> Gestão
+                                </a>
+                                <a t-attf-class="nav-item #{'active' if active_menu == 'candidaturas' else ''}" href="/gestao/candidaturas">
+                                    <span class="nav-icon">🗂️</span> Candidaturas
+                                </a>
                                 <a t-attf-class="nav-item #{'active' if active_menu == 'questionarios' else ''}" href="/questionarios">
                                     <span class="nav-icon">📝</span> Questionários
                                 </a>

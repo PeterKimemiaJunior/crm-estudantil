@@ -2,7 +2,8 @@
 <odoo>
     <data>
         <template id="page_gestao_candidaturas" name="Gestão de Candidaturas">
-            <t t-call="website.layout">
+            <t t-call="crm_estudantil.crm_layout">
+                <t t-set="active_menu" t-value="'candidaturas'"/>
                 <div class="o_websites_full">
                     <style>
                         .gestao-container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
