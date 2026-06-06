@@ -6,7 +6,7 @@
                 <t t-set="active_menu" t-value="'candidatura'"/>
                 <t t-set="page_title" t-value="'Candidatura'"/>
                 <t t-set="extra_css">
-                    .form-page { max-width: 680px; }
+                    .form-page { max-width: 680px; margin: 0 auto; }
                     .breadcrumb { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
                     .breadcrumb a { color: var(--primary); text-decoration: none; }
                     .breadcrumb a:hover { text-decoration: underline; }

@@ -135,3 +135,11 @@ class CrmEstudantilController(http.Controller):
             return {'success': True, 'message': 'Oportunidade criada com sucesso!'}
         except Exception as e:
             return {'success': False, 'message': str(e)}
+
+    # 7. Rota de Questionários (Inquéritos)
+    @http.route('/questionarios', type='http', auth='public', website=True)
+    def questionarios(self, **kwargs):
+        surveys = request.env['survey.survey'].sudo().search([('active', '=', True)])
+        return request.render('crm_estudantil.page_questionarios', {
+            'surveys': surveys
+        })

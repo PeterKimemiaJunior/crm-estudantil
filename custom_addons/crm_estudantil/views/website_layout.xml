@@ -74,6 +74,9 @@
                                 <a t-attf-class="nav-item #{'active' if active_menu == 'dashboard' else ''}" href="/dashboard">
                                     <span class="nav-icon">📊</span> Dashboard
                                 </a>
+                                <a t-attf-class="nav-item #{'active' if active_menu == 'questionarios' else ''}" href="/questionarios">
+                                    <span class="nav-icon">📝</span> Questionários
+                                </a>
                             </nav>
                             
                             <div class="sidebar-user">
