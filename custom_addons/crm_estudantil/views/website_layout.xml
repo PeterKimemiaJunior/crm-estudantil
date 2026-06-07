@@ -54,43 +54,49 @@
                                 <div class="sub">Universidade Eduardo Mondlane</div>
                             </div>
                             <nav>
-                                <div class="nav-section">Principal</div>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'oportunidades' else ''}" href="/oportunidades">
-                                    <span class="nav-icon">📋</span> Oportunidades
-                                </a>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'kanban' else ''}" href="/kanban">
-                                    <span class="nav-icon">🗂️</span> Pipeline CRM
+                                <div class="nav-section">Estudante (Portal)</div>
+                                <a class="nav-item" href="/portal">
+                                    <span class="nav-icon">🌐</span> Ir para o Portal
                                 </a>
                                 
-                                <div class="nav-section">Estudante</div>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'candidatura' else ''}" href="/candidatura">
-                                    <span class="nav-icon">📝</span> Candidatar-se
-                                </a>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'faq' else ''}" href="/faq">
-                                    <span class="nav-icon">💬</span> Suporte &amp; FAQ
-                                </a>
-                                
-                                <div class="nav-section">Gestão</div>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'dashboard' else ''}" href="/dashboard">
-                                    <span class="nav-icon">📊</span> Dashboard
-                                </a>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'gestao' else ''}" href="/gestao">
-                                    <span class="nav-icon">🏠</span> Gestão
-                                </a>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'candidaturas' else ''}" href="/gestao/candidaturas">
-                                    <span class="nav-icon">🗂️</span> Candidaturas
-                                </a>
-                                <a t-attf-class="nav-item #{'active' if active_menu == 'questionarios' else ''}" href="/questionarios">
-                                    <span class="nav-icon">📝</span> Questionários
-                                </a>
+                                <t t-if="request.env.user.has_group('base.group_user')">
+                                    <div class="nav-section">Gestor Académico</div>
+                                    <a t-attf-class="nav-item #{'active' if active_menu == 'dashboard' else ''}" href="/gestao/dashboard">
+                                        <span class="nav-icon">📊</span> Dashboard
+                                    </a>
+                                    <a t-attf-class="nav-item #{'active' if active_menu == 'gestao_oportunidades' else ''}" href="/gestao/oportunidades">
+                                        <span class="nav-icon">💼</span> Oportunidades
+                                    </a>
+                                    <a t-attf-class="nav-item #{'active' if active_menu == 'kanban' else ''}" href="/gestao/kanban">
+                                        <span class="nav-icon">🗂️</span> Pipeline CRM
+                                    </a>
+                                    <a t-attf-class="nav-item #{'active' if active_menu == 'candidaturas' else ''}" href="/gestao/candidaturas">
+                                        <span class="nav-icon">👥</span> Candidaturas
+                                    </a>
+                                    <a class="nav-item" href="/web#action=crm_estudantil.action_crm_faq">
+                                        <span class="nav-icon">⚙️</span> Gerir FAQs
+                                    </a>
+                                    <a class="nav-item" href="/web#model=survey.survey&amp;view_type=list">
+                                        <span class="nav-icon">📋</span> Gerir Inquéritos
+                                    </a>
+                                </t>
                             </nav>
                             
                             <div class="sidebar-user">
-                                <div class="user-avatar">GA</div>
-                                <div>
-                                    <div class="user-name">Dr. Mussa Abílio</div>
-                                    <div class="user-role">Gestor Académico</div>
-                                </div>
+                                <t t-if="request.env.user._is_public()">
+                                    <div class="user-avatar" style="background:var(--text-muted);">E</div>
+                                    <div>
+                                        <div class="user-name">Estudante</div>
+                                        <div class="user-role">Acesso Público</div>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="user-avatar"><t t-esc="request.env.user.name[0]"/></div>
+                                    <div>
+                                        <div class="user-name"><t t-esc="request.env.user.name"/></div>
+                                        <div class="user-role">Sessão Iniciada</div>
+                                    </div>
+                                </t>
                             </div>
                         </aside>
                         

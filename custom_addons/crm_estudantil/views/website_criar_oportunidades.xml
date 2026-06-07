@@ -6,7 +6,7 @@
                 <t t-set="page_title" t-value="'Criar Oportunidade'"/>
                 <t t-set="active_menu" t-value="'oportunidades'"/>
                 <t t-set="topbar_actions">
-                    <a href="/oportunidades" class="btn btn-outline">← Voltar</a>
+                    <a href="/portal/oportunidades" class="btn btn-outline">← Voltar</a>
                 </t>
                 <t t-set="extra_css">
                     .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; max-width: 640px; }
@@ -49,7 +49,7 @@
                         Criar Oportunidade
                     </button>
 
-                    <div class="msg-success" id="msg-success">✅ Oportunidade criada com sucesso! <a href="/oportunidades">Ver todas →</a></div>
+                    <div class="msg-success" id="msg-success">✅ Oportunidade criada com sucesso! <a href="/portal/oportunidades">Ver todas →</a></div>
                     <div class="msg-error"   id="msg-error"></div>
                 </div>
 

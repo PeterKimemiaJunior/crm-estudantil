@@ -2,13 +2,9 @@
 <odoo>
     <data>
         <template id="page_oportunidades" name="Oportunidades">
-            <t t-call="crm_estudantil.crm_layout">
-                <t t-set="active_menu" t-value="'oportunidades'"/>
+            <t t-call="crm_estudantil.portal_layout">
+                <t t-set="portal_page" t-value="'oportunidades'"/>
                 <t t-set="page_title" t-value="'Oportunidades'"/>
-                <t t-set="topbar_actions">
-                    <a href="/faq" class="btn btn-outline">💬 Suporte</a>
-                    <a href="/criar-oportunidade" class="btn btn-action">➕ Nova Oportunidade</a>
-                </t>
                 <t t-set="extra_css">
                     .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
                     .page-hero::after { content: ''; position: absolute; right: -40px; top: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.05); }
@@ -57,7 +53,6 @@
                     </div>
                 </div>
 
-                <!-- CORRECÇÃO: opp é agora um dict, acesso com opp['chave'] -->
                 <div class="cards-grid" id="cards-grid">
                     <t t-if="opportunities">
                         <t t-foreach="opportunities" t-as="opp">
@@ -81,7 +76,7 @@
                                 <div class="opp-desc" t-esc="opp['description'] or 'Sem descrição.'"/>
                                 <div class="opp-footer">
                                     <span class="deadline">Prazo: <strong t-esc="opp['deadline']"/></span>
-                                    <a t-attf-href="/candidatura?lead_id=#{opp['id']}"
+                                    <a t-attf-href="/portal/candidatura?lead_id=#{opp['id']}"
                                        class="btn btn-action"
                                        style="font-size:12px;padding:5px 12px;">
                                         Candidatar →
@@ -93,7 +88,7 @@
                     <t t-else="">
                         <div class="empty-state">
                             <p>Ainda não há oportunidades disponíveis.</p>
-                            <a href="/criar-oportunidade" class="btn btn-primary">➕ Criar Oportunidade</a>
+                            <a href="/gestao/criar-oportunidade" class="btn btn-primary">➕ Criar Oportunidade</a>
                         </div>
                     </t>
                 </div>

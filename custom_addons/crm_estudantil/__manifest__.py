@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/crm_survey_wizard_view.xml',
+        'views/crm_faq_views.xml',
         'views/website_layout.xml',
         'views/website_oportunidades.xml',
         'views/website_candidatura.xml',
@@ -18,13 +19,12 @@
         'views/website_dashboard.xml',
         'views/gestao_candidaturas.xml',
         'views/website_criar_oportunidades.xml',
-        'views/portal_layout.xml',
-        'views/portal_canditatura.xml',
-        'views/portal_oportunidades.xml',
         'views/gestao_oportunidades.xml',
         'views/website_oportunidade_detalhe.xml',
         'views/gestao_home.xml',
         'views/website_questionarios.xml',
+        'views/portal_layout.xml',
+        'views/portal_home.xml',
     ],
     'assets': {
         'web.assets_frontend': [

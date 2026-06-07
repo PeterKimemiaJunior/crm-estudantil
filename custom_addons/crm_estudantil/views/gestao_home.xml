@@ -58,7 +58,7 @@
                 <h4 style="margin-top:0;">Ações Rápidas</h4>
                 <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
                     <a href="/gestao/oportunidades" class="btn btn-outline">Ver todas as oportunidades</a>
-                    <a href="/criar-oportunidade" class="btn btn-action">Criar nova oportunidade</a>
+                    <a href="/gestao/criar-oportunidade" class="btn btn-action">Criar nova oportunidade</a>
                     <a href="/gestao/candidaturas" class="btn btn-outline">Ver Kanban de candidaturas</a>
                 </div>
             </div>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<!-- ================================================================
+     PORTAL HOME — /portal
+     ================================================================ -->
+<template id="portal_home" name="Portal Estudante — Início">
+    <t t-call="crm_estudantil.portal_layout">
+        <t t-set="portal_page" t-value="'home'"/>
+        <t t-set="extra_css">
+            .hero-section {
+                background: linear-gradient(135deg, var(--p-primary) 0%, #185FA5 100%);
+                border-radius: 14px;
+                padding: 52px 48px;
+                color: #fff;
+                margin-bottom: 40px;
+                position: relative;
+                overflow: hidden;
+            }
+            .hero-section::after {
+                content: '';
+                position: absolute;
+                right: -60px; top: -60px;
+                width: 280px; height: 280px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.05);
+            }
+            .hero-section h1 {
+                font-size: 30px;
+                font-weight: 700;
+                margin-bottom: 12px;
+                line-height: 1.3;
+                position: relative;
+            }
+            .hero-section p {
+                font-size: 16px;
+                color: rgba(255,255,255,0.78);
+                max-width: 520px;
+                margin-bottom: 28px;
+            }
+            .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+            .cards-row {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+            @media(max-width:700px) { .cards-row { grid-template-columns: 1fr; } }
+            .info-card {
+                background: var(--p-card);
+                border: 1px solid var(--p-border);
+                border-radius: 12px;
+                padding: 24px 22px;
+            }
+            .info-card .ic-icon { font-size: 28px; margin-bottom: 12px; }
+            .info-card h3 { font-size: 16px; font-weight: 600; color: var(--p-text); margin-bottom: 6px; }
+            .info-card p  { font-size: 13.5px; color: var(--p-muted); line-height: 1.55; margin-bottom: 14px; }
+            .section-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--p-text);
+                margin-bottom: 16px;
+            }
+            .opp-preview-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+            .opp-mini-card {
+                background: var(--p-card);
+                border: 1px solid var(--p-border);
+                border-radius: 10px;
+                padding: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                transition: box-shadow .2s, transform .2s;
+            }
+            .opp-mini-card:hover { box-shadow: 0 4px 16px rgba(15,76,129,0.10); transform: translateY(-2px); }
+            .opp-mini-title { font-size: 14px; font-weight: 600; color: var(--p-text); line-height: 1.4; }
+            .opp-mini-company { font-size: 12px; color: var(--p-muted); }
+            .opp-mini-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--p-border); margin-top: 4px; }
+            .opp-mini-prazo { font-size: 11.5px; color: var(--p-muted); }
+            .view-all { text-align: center; margin-top: 8px; }
+        </t>
+
+        <!-- Hero -->
+        <div class="hero-section">
+            <h1>Bem-vindo ao Portal do Estudante</h1>
+            <p>Descobre estágios, pós-graduações e eventos criados especialmente para ti. Candida-te em poucos minutos.</p>
+            <div class="hero-actions">
+                <a href="/portal/oportunidades" class="pbtn pbtn-action" style="font-size:15px;padding:11px 24px;">
+                    Ver Oportunidades
+                </a>
+                <a href="/portal/candidatura" class="pbtn pbtn-outline" style="font-size:15px;padding:11px 24px;border-color:rgba(255,255,255,0.5);color:#fff;">
+                    Submeter Candidatura
+                </a>
+            </div>
+        </div>
+
+        <!-- Como funciona -->
+        <div class="section-title">Como funciona</div>
+        <div class="cards-row">
+            <div class="info-card">
+                <div class="ic-icon">🔍</div>
+                <h3>1. Explora</h3>
+                <p>Navega pelas oportunidades disponíveis e filtra por tipo ou área de interesse.</p>
+                <a href="/portal/oportunidades" class="pbtn pbtn-outline" style="font-size:13px;">Ver Oportunidades</a>
+            </div>
+            <div class="info-card">
+                <div class="ic-icon">📝</div>
+                <h3>2. Candidata-te</h3>
+                <p>Preenche o formulário de candidatura com os teus dados e carta de motivação.</p>
+                <a href="/portal/candidatura" class="pbtn pbtn-outline" style="font-size:13px;">Candidatar-me</a>
+            </div>
+            <div class="info-card">
+                <div class="ic-icon">📬</div>
+                <h3>3. Aguarda resposta</h3>
+                <p>A equipa académica analisa a tua candidatura e contacta-te por email em até 10 dias úteis.</p>
+                <a href="/portal/faq" class="pbtn pbtn-outline" style="font-size:13px;">Ver FAQ</a>
+            </div>
+        </div>
+
+        <!-- Oportunidades recentes -->
+        <div class="section-title">Oportunidades Recentes</div>
+        <div class="opp-preview-grid">
+            <t t-foreach="opportunities[:6]" t-as="opp">
+                <div class="opp-mini-card">
+                    <span class="pbadge"
+                          t-attf-class="pbadge-#{opp['opportunity_type']}">
+                        <t t-if="opp['opportunity_type'] == 'estagio'">Estágio</t>
+                        <t t-elif="opp['opportunity_type'] == 'posgraduacao'">Pós-Graduação</t>
+                        <t t-elif="opp['opportunity_type'] == 'evento'">Evento</t>
+                        <t t-else="">Suporte</t>
+                    </span>
+                    <div class="opp-mini-title" t-esc="opp['name']"/>
+                    <div class="opp-mini-company" t-esc="opp['company_name']"/>
+                    <div class="opp-mini-footer">
+                        <span class="opp-mini-prazo">Prazo: <strong t-esc="opp['deadline']"/></span>
+                        <a t-attf-href="/portal/candidatura?opp_id=#{opp['id']}"
+                           class="pbtn pbtn-action"
+                           style="font-size:11.5px;padding:4px 12px;">
+                            Candidatar →
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </div>
+        <div class="view-all">
+            <a href="/portal/oportunidades" class="pbtn pbtn-primary">Ver todas as oportunidades →</a>
+        </div>
+
+    </t>
+</template>
+
+</data>
+</odoo>

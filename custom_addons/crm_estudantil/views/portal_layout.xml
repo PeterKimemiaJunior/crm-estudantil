@@ -142,8 +142,35 @@
                 .pub-footer a { color: rgba(255,255,255,0.5); text-decoration:none; }
                 .pub-footer a:hover { color:#fff; }
 
+                /* ── Tokens Compatibility for subpages ── */
+                :root {
+                    --primary: #0F4C81; --primary-light: #E6F1FB; --primary-dark: #042C53;
+                    --action: #1D9E75; --action-light: #E1F5EE; --action-dark: #0F6E56;
+                    --bg-page: #F2F4F7; --bg-card: #FFFFFF;
+                    --text-primary: #1A2B3C; --text-muted: #5A6475;
+                    --border: #DDE3EC;
+                    --estagio-bg: #E6F1FB; --estagio-tx: #0F4C81;
+                    --posgrad-bg: #EEEDFE; --posgrad-tx: #3C3489;
+                    --evento-bg: #FFF3DC; --evento-tx: #7A4F00;
+                    --suporte-bg: #EAF3DE; --suporte-tx: #27500A;
+                }
+                
+                .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; font-family: inherit; transition: all 0.15s; text-decoration: none; }
+                .btn-primary { background: var(--primary); color: #fff; }
+                .btn-primary:hover { background: var(--primary-dark); }
+                .btn-action { background: var(--action); color: #fff; }
+                .btn-action:hover { background: var(--action-dark); }
+                .btn-outline { background: transparent; border-color: var(--border); color: var(--text-primary); }
+                .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+                
+                .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; }
+                .badge-estagio { background: var(--estagio-bg); color: var(--estagio-tx); }
+                .badge-posgrad  { background: var(--posgrad-bg);  color: var(--posgrad-tx); }
+                .badge-evento   { background: var(--evento-bg);   color: var(--evento-tx); }
+                .badge-suporte  { background: var(--suporte-bg);  color: var(--suporte-tx); }
+
                 /* ── CSS extra injectado por cada página ── */
-                <t t-out="portal_css or ''"/>
+                <t t-out="extra_css or ''"/>
             </style>
 
             <!-- Navbar -->
@@ -165,6 +192,15 @@
                        t-attf-class="pub-nav-link #{'active' if portal_page == 'faq' else ''}">
                         Suporte
                     </a>
+                    <a href="/portal/questionarios"
+                       t-attf-class="pub-nav-link #{'active' if portal_page == 'questionarios' else ''}">
+                        Inquéritos
+                    </a>
+                    <t t-if="request.env.user.has_group('base.group_user')">
+                        <a href="/gestao/dashboard" class="pub-nav-link" style="color:#FFF3DC;">
+                            Área de Gestão
+                        </a>
+                    </t>
                     <a href="/portal/candidatura"
                        class="pbtn pbtn-action"
                        style="margin-left:8px; font-size:13px; padding:6px 16px;">

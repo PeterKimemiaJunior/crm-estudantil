@@ -2,9 +2,8 @@
 <odoo>
     <data>
         <template id="page_faq" name="FAQ">
-            <t t-call="crm_estudantil.crm_layout">
-                <t t-set="active_menu" t-value="'faq'"/>
-                <t t-set="page_title" t-value="'Suporte &amp; FAQ'"/>
+            <t t-call="crm_estudantil.portal_layout">
+                <t t-set="portal_page" t-value="'faq'"/>
                 <t t-set="extra_css">
                     .faq-search-wrap { position: relative; margin-bottom: 20px; }
                     .faq-search-wrap input { width: 100%; max-width: 520px; padding: 10px 14px 10px 40px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; background: var(--bg-card); outline: none; transition: border 0.15s; }
@@ -39,26 +38,26 @@
                                 </div>
                                 
                                 <div id="faq-list">
-                                    <!-- Item 1 -->
-                                    <div class="faq-item" data-cat="estagio" data-search="candidatar estágio formulário online">
-                                        <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Como me candidato a um estágio?</span><span class="faq-chevron">▼</span></div>
-                                        <div class="faq-answer">Acede à página de Oportunidades, selecciona a vaga desejada e preenche o formulário de candidatura.</div>
-                                    </div>
-                                    <!-- Item 2 -->
-                                    <div class="faq-item" data-cat="estagio" data-search="candidatar múltiplos estágios simultaneamente">
-                                        <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-estagio">Estágios</span><span class="faq-q-text">Posso candidatar-me a mais de um estágio?</span><span class="faq-chevron">▼</span></div>
-                                        <div class="faq-answer">Sim, podes submeter candidaturas para múltiplas oportunidades em simultâneo.</div>
-                                    </div>
-                                    <!-- Item 3 -->
-                                    <div class="faq-item" data-cat="inscricoes" data-search="documentos necessários candidatura cv carta">
-                                        <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-suporte" style="background:var(--posgrad-bg);color:var(--posgrad-tx)">Inscrições</span><span class="faq-q-text">Quais os documentos necessários?</span><span class="faq-chevron">▼</span></div>
-                                        <div class="faq-answer">Necessitas de: CV actualizado em PDF ou Word, carta de motivação e número de estudante activo na UEM.</div>
-                                    </div>
-                                    <!-- Item 4 -->
-                                    <div class="faq-item" data-cat="regulamentos" data-search="dados confidenciais privacidade partilha empresa">
-                                        <div class="faq-question" onclick="toggleFaq(this)"><span class="badge badge-evento">Regulamentos</span><span class="faq-q-text">Os dados são confidenciais?</span><span class="faq-chevron">▼</span></div>
-                                        <div class="faq-answer">Sim. Os teus dados são tratados em conformidade com a política de privacidade da UEM.</div>
-                                    </div>
+                                    <t t-foreach="faqs" t-as="faq">
+                                        <div class="faq-item" t-att-data-cat="faq.category" t-att-data-search="faq.question.lower() if faq.question else ''">
+                                            <div class="faq-question" onclick="toggleFaq(this)">
+                                                <span t-if="faq.category == 'estagio'" class="badge badge-estagio">Estágios</span>
+                                                <span t-elif="faq.category == 'inscricoes'" class="badge badge-suporte" style="background:var(--posgrad-bg);color:var(--posgrad-tx)">Inscrições</span>
+                                                <span t-elif="faq.category == 'regulamentos'" class="badge badge-evento">Regulamentos</span>
+                                                <span t-else="" class="badge badge-suporte">Outros</span>
+                                                <span class="faq-q-text"><t t-esc="faq.question"/></span>
+                                                <span class="faq-chevron">▼</span>
+                                            </div>
+                                            <div class="faq-answer">
+                                                <t t-out="faq.answer"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-if="not faqs">
+                                        <div style="padding: 20px; text-align: center; color: var(--text-muted);">
+                                            Nenhuma pergunta frequente encontrada.
+                                        </div>
+                                    </t>
                                 </div>
                             </div>
 

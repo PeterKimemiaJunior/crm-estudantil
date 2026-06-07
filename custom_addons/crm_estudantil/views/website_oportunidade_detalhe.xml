@@ -11,7 +11,7 @@
         <t t-set="active_menu" t-value="'oportunidades'"/>
         <t t-set="page_title" t-value="oportunidade.name"/>
         <t t-set="topbar_actions">
-            <a href="/oportunidades" class="btn btn-outline">← Voltar</a>
+            <a href="/portal/oportunidades" class="btn btn-outline">← Voltar</a>
         </t>
         <t t-set="extra_css">
             .breadcrumb { font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px; }
@@ -113,7 +113,7 @@
         </t>
 
         <div class="breadcrumb">
-            <a href="/oportunidades">Oportunidades</a> › <span t-esc="oportunidade.name"/>
+            <a href="/portal/oportunidades">Oportunidades</a> › <span t-esc="oportunidade.name"/>
         </div>
 
         <!-- Cabeçalho da oportunidade -->
@@ -383,7 +383,7 @@
         </t>
 
         <div class="breadcrumb">
-            <a href="/oportunidades">Oportunidades</a> ›
+            <a href="/portal/oportunidades">Oportunidades</a> ›
             <a t-attf-href="/oportunidades/#{candidato['opp_id']}"
                t-esc="candidato['opp_nome']"/>
             › <span t-esc="candidato['nome']"/>

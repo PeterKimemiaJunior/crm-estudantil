@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_crm_survey_wizard,crm.survey.wizard,model_crm_survey_wizard,base.group_user,1,1,1,1
+access_crm_faq_user,crm.faq.user,model_crm_faq,base.group_user,1,1,1,1
+access_crm_faq_public,crm.faq.public,model_crm_faq,base.group_public,1,0,0,0

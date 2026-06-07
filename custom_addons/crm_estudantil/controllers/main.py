@@ -3,10 +3,30 @@ from odoo import http
 # pyrefly: ignore [missing-import]
 from odoo.http import request
 import json
+from werkzeug.utils import redirect
 
 class CrmEstudantilController(http.Controller):
 
-    @http.route('/oportunidades', type='http', auth='public', website=True)
+    @http.route('/portal', type='http', auth='public', website=True)
+    def portal_home(self, **kwargs):
+        opportunities = request.env['crm.oportunidades'].sudo().search([('active', '=', True)], limit=6, order='create_date desc')
+        
+        opps_list = []
+        for op in opportunities:
+            empresa = op.company_name or 'UEM'
+            opps_list.append({
+                'id':               op.id,
+                'name':             op.name or '',
+                'company_name':     empresa,
+                'description':      op.description or '',
+                'opportunity_type': op.opportunity_type or 'estagio',
+                'deadline':         op.deadline.strftime('%d %b %Y') if op.deadline else '—',
+                'initials':         empresa[:2].upper(),
+            })
+
+        return request.render('crm_estudantil.portal_home', {'opportunities': opps_list})
+
+    @http.route('/portal/oportunidades', type='http', auth='public', website=True)
     def oportunidades(self, **kwargs):
         records = request.env['crm.oportunidades'].sudo().search([('active', '=', True)])
         opportunities = []
@@ -24,7 +44,7 @@ class CrmEstudantilController(http.Controller):
             })
         return request.render('crm_estudantil.page_oportunidades', {'opportunities': opportunities})
 
-    @http.route('/candidatura', type='http', auth='public', website=True)
+    @http.route('/portal/candidatura', type='http', auth='public', website=True)
     def candidatura(self, lead_id=None, **kwargs):
         oportunidade = None
         if lead_id:
@@ -106,11 +126,12 @@ class CrmEstudantilController(http.Controller):
         except Exception:
             return {'success': False, 'message': 'Erro interno no servidor.'}
 
-    @http.route('/faq', type='http', auth='public', website=True)
+    @http.route('/portal/faq', type='http', auth='public', website=True)
     def faq(self, **kwargs):
-        return request.render('crm_estudantil.page_faq')
+        faqs = request.env['crm.faq'].sudo().search([('active', '=', True)])
+        return request.render('crm_estudantil.page_faq', {'faqs': faqs})
 
-    @http.route('/dashboard', type='http', auth='user', website=True)
+    @http.route('/gestao/dashboard', type='http', auth='user', website=True)
     def dashboard(self, **kwargs):
         all_leads = request.env['crm.lead'].sudo().search([('type', '=', 'lead')])
         total = len(all_leads)
@@ -125,11 +146,11 @@ class CrmEstudantilController(http.Controller):
             'stats': stats, 'total': total, 'taxa_sucesso': taxa_sucesso,
         })
 
-    @http.route('/kanban', type='http', auth='user', website=True)
+    @http.route('/gestao/kanban', type='http', auth='user', website=True)
     def kanban(self, **kwargs):
         return request.render('crm_estudantil.page_kanban')
 
-    @http.route('/criar-oportunidade', type='http', auth='user', website=True)
+    @http.route('/gestao/criar-oportunidade', type='http', auth='user', website=True)
     def criar_oportunidade(self, **kwargs):
         return request.render('crm_estudantil.page_criar_oportunidade')
 
@@ -152,7 +173,7 @@ class CrmEstudantilController(http.Controller):
             return {'success': False, 'message': str(e)}
 
     # 7. Rota de Questionários (Inquéritos)
-    @http.route('/questionarios', type='http', auth='public', website=True)
+    @http.route('/portal/questionarios', type='http', auth='public', website=True)
     def questionarios(self, **kwargs):
         surveys = request.env['survey.survey'].sudo().search([('active', '=', True)])
         return request.render('crm_estudantil.page_questionarios', {

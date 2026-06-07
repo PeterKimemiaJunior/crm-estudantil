@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_crm_faq_form" model="ir.ui.view">
+            <field name="name">crm.faq.form</field>
+            <field name="model">crm.faq</field>
+            <field name="arch" type="xml">
+                <form string="Artigo FAQ">
+                    <sheet>
+                        <widget name="web_ribbon" title="Arquivado" bg_color="bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="question" class="oe_edit_only"/>
+                            <h1><field name="question"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="category"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Resposta" name="answer">
+                                <field name="answer" options="{'style-inline': true}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_crm_faq_tree" model="ir.ui.view">
+            <field name="name">crm.faq.tree</field>
+            <field name="model">crm.faq</field>
+            <field name="arch" type="xml">
+                <tree string="FAQs">
+                    <field name="sequence" widget="handle"/>
+                    <field name="question"/>
+                    <field name="category"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_crm_faq" model="ir.actions.act_window">
+            <field name="name">Gestão de FAQs</field>
+            <field name="res_model">crm.faq</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Cria a tua primeira pergunta frequente (FAQ)!
+              </p>
+              <p>
+                As FAQs adicionadas aqui aparecerão automaticamente na página de suporte do portal do estudante.
+              </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_crm_estudantil_faq"
+                  name="FAQs"
+                  parent="crm.menu_crm_config_lead"
+                  action="action_crm_faq"
+                  sequence="20"/>
+    </data>
+</odoo>

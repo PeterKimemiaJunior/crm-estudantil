@@ -124,6 +124,21 @@ with registry.cursor() as cr:
         else:
             print(f"  ⏭  Questionário já existe: {s['title']}")
 
+    # ─── FAQs ──────────────────────────────────────────
+    Faq = env['crm.faq']
+    faqs = [
+        {'question': 'Como me candidato a um estágio?', 'answer': 'Acede à página de Oportunidades, selecciona a vaga desejada e preenche o formulário de candidatura.', 'category': 'estagio'},
+        {'question': 'Posso candidatar-me a mais de um estágio?', 'answer': 'Sim, podes submeter candidaturas para múltiplas oportunidades em simultâneo.', 'category': 'estagio'},
+        {'question': 'Quais os documentos necessários?', 'answer': 'Necessitas de: CV actualizado em PDF ou Word, carta de motivação e número de estudante activo na UEM.', 'category': 'inscricoes'},
+        {'question': 'Os dados são confidenciais?', 'answer': 'Sim. Os teus dados são tratados em conformidade com a política de privacidade da UEM.', 'category': 'regulamentos'},
+    ]
+    for f in faqs:
+        if not Faq.search([('question', '=', f['question'])], limit=1):
+            Faq.create(f)
+            print(f"  ✅ FAQ: {f['question']}")
+        else:
+            print(f"  ⏭  FAQ já existe: {f['question']}")
+
     cr.commit()
 
     print()

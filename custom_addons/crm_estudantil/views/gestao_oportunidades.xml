@@ -11,7 +11,7 @@
         <t t-set="active_menu" t-value="'oportunidades'"/>
         <t t-set="page_title" t-value="'Oportunidades'"/>
         <t t-set="topbar_actions">
-            <a href="/criar-oportunidade" class="btn btn-action">➕ Nova Oportunidade</a>
+            <a href="/gestao/criar-oportunidade" class="btn btn-action">➕ Nova Oportunidade</a>
         </t>
         <t t-set="extra_css">
             .opp-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
@@ -78,7 +78,7 @@
                 <t t-if="not oportunidades">
                     <tr>
                         <td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">
-                            Ainda não há oportunidades. <a href="/criar-oportunidade">Criar agora →</a>
+                            Ainda não há oportunidades. <a href="/gestao/criar-oportunidade">Criar agora →</a>
                         </td>
                     </tr>
                 </t>

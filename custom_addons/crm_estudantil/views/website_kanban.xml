@@ -6,8 +6,8 @@
                 <t t-set="active_menu" t-value="'kanban'"/>
                 <t t-set="page_title" t-value="'Pipeline CRM'"/>
                 <t t-set="topbar_actions">
-                    <a href="/faq" class="btn btn-outline">💬 Suporte</a>
-                    <a href="/candidatura" class="btn btn-action">+ Nova Candidatura</a>
+                    <a href="/portal/faq" class="btn btn-outline">💬 Suporte</a>
+                    <a href="/portal/candidatura" class="btn btn-action">+ Nova Candidatura</a>
                 </t>
                 <t t-set="extra_css">
                     .kanban-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }

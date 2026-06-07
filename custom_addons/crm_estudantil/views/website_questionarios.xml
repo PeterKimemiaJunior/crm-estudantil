@@ -2,12 +2,8 @@
 <odoo>
     <data>
         <template id="page_questionarios" name="Questionários">
-            <t t-call="crm_estudantil.crm_layout">
-                <t t-set="active_menu" t-value="'questionarios'"/>
-                <t t-set="page_title" t-value="'Questionários'"/>
-                <t t-set="topbar_actions">
-                    <a href="/oportunidades" class="btn btn-outline">← Oportunidades</a>
-                </t>
+            <t t-call="crm_estudantil.portal_layout">
+                <t t-set="portal_page" t-value="'questionarios'"/>
                 <t t-set="extra_css">
                     /* Hero */
                     .page-hero { background: linear-gradient(135deg, var(--primary) 0%, #185FA5 100%); border-radius: 12px; padding: 36px 40px; margin-bottom: 28px; color: #fff; position: relative; overflow: hidden; }
