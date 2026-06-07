@@ -53,28 +53,26 @@ odoo_project/
 │       ├── __init__.py
 │       ├── models/
 │       │   ├── crm_lead_ext.py         # Extensão do crm.lead com campos estudantis
-│       │   └── crm_oportunidade_ext.py # Modelo crm.oportunidades (custom)
+│       │   ├── crm_oportunidade_ext.py # Modelo crm.oportunidades (custom)
+│       │   └── crm_faq.py              # Modelo de suporte/FAQ
 │       ├── controllers/
-│       │   ├── main.py                 # Rotas públicas principais
-│       │   ├── portal.py               # Rotas do portal do estudante
+│       │   ├── main.py                 # Rotas do portal estudantil (/portal)
 │       │   ├── survey.py               # Rota de questionários
 │       │   ├── gestao_canditatos.py    # Rotas de gestão de candidatos (admin)
-│       │   └── gestao.py              # Rota do Kanban de candidaturas
+│       │   └── gestao.py               # Rotas do Backoffice/Gestão (/gestao)
 │       ├── views/
-│       │   ├── website_layout.xml          # Layout base (sidebar + topbar)
+│       │   ├── website_layout.xml          # Layout da gestão (Sidebar)
+│       │   ├── portal_layout.xml           # Layout do estudante (Navbar)
+│       │   ├── portal_home.xml             # Landing page do portal
 │       │   ├── website_oportunidades.xml   # Listagem de oportunidades
 │       │   ├── website_candidatura.xml     # Formulário de candidatura
-│       │   ├── website_faq.xml             # Suporte & FAQ
+│       │   ├── website_faq.xml             # Suporte & FAQ (Renderização dinâmica)
 │       │   ├── website_kanban.xml          # Kanban público
-│       │   ├── website_dashboard.xml       # Dashboard de gestão
 │       │   ├── website_questionarios.xml   # Listagem de questionários
-│       │   ├── website_criar_oportunidades.xml
-│       │   ├── website_oportunidade_detalhe.xml
+│       │   ├── gestao_home.xml             # Dashboard de gestão
 │       │   ├── gestao_candidaturas.xml     # Kanban de candidaturas (admin)
 │       │   ├── gestao_oportunidades.xml    # Gestão de oportunidades (admin)
-│       │   ├── portal_layout.xml           # Layout do portal estudante
-│       │   ├── portal_oportunidades.xml
-│       │   └── portal_canditatura.xml
+│       │   └── crm_faq_views.xml           # Vistas de backend para o modelo FAQ
 │       ├── data/
 │       │   └── crm_stages.xml          # Estágios CRM (New/Qualified/Won/Lost)
 │       └── static/src/css/
@@ -205,38 +203,27 @@ SELECT title FROM survey_survey WHERE active = true;
 
 ---
 
-## Páginas e Rotas
-
-### 🌐 Páginas Públicas (sem login)
+### 🎓 Portal do Estudante (Páginas Públicas com Navbar)
 
 | Rota                           | Descrição                                                       | View                        |
 | ------------------------------ | --------------------------------------------------------------- | --------------------------- |
-| `GET /oportunidades`           | Listagem de vagas activas com filtros por tipo e pesquisa       | `page_oportunidades`        |
-| `GET /oportunidades/<id>`      | Detalhe de uma oportunidade específica                          | `page_oportunidade_detalhe` |
-| `GET /candidatura[?lead_id=X]` | Formulário de candidatura (pré-preenchido se `lead_id` passado) | `page_candidatura`          |
-| `GET /faq`                     | Suporte académico e perguntas frequentes com filtro JS          | `page_faq`                  |
-| `GET /dashboard`               | Dashboard de resumo das oportunidades                           | `page_dashboard`            |
-| `GET /kanban`                  | Vista Kanban das oportunidades                                  | `page_kanban`               |
-| `GET /criar-oportunidade`      | Formulário de criação de nova oportunidade                      | `page_criar_oportunidade`   |
-| `GET /questionarios`           | Listagem dos questionários disponíveis                          | `page_questionarios`        |
+| `GET /portal`                  | Landing page do portal estudantil                               | `portal_home`               |
+| `GET /portal/oportunidades`    | Listagem de vagas activas com filtros por tipo e pesquisa       | `page_oportunidades`        |
+| `GET /portal/candidatura`      | Formulário de candidatura (pré-preenchido se `lead_id` passado) | `page_candidatura`          |
+| `GET /portal/faq`              | Suporte académico renderizado dinamicamente via BD              | `page_faq`                  |
+| `GET /portal/questionarios`    | Listagem dos questionários disponíveis                          | `page_questionarios`        |
 
-### 🔒 Páginas de Gestão (requerem login Odoo)
+### 🔒 Páginas de Gestão (Backoffice com Sidebar, Requer Login Odoo)
 
-| Rota                             | Descrição                                         | View                               |
-| -------------------------------- | ------------------------------------------------- | ---------------------------------- |
-| `GET /gestao/oportunidades`      | Lista de oportunidades com contagem de candidatos | `page_gestao_oportunidades`        |
-| `GET /gestao/oportunidades/<id>` | Detalhe da oportunidade com lista de candidatos   | `page_gestao_oportunidade_detalhe` |
-| `GET /gestao/candidatos/<id>`    | Perfil completo de um candidato                   | `page_gestao_candidato_detalhe`    |
-| `GET /gestao/candidaturas`       | Kanban de todas as candidaturas por estágio       | `page_gestao_candidaturas`         |
-
-### 🎓 Portal do Estudante (rotas alternativas públicas)
-
-| Rota                        | Descrição                                 |
-| --------------------------- | ----------------------------------------- |
-| `GET /portal`               | Página de entrada do portal estudantil    |
-| `GET /portal/oportunidades` | Oportunidades na vista portal             |
-| `GET /portal/candidatura`   | Formulário de candidatura na vista portal |
-| `GET /portal/faq`           | FAQ na vista portal                       |
+| Rota                                | Descrição                                         | View                               |
+| ----------------------------------- | ------------------------------------------------- | ---------------------------------- |
+| `GET /gestao/dashboard`             | Dashboard de resumo das oportunidades             | `gestao_home`                      |
+| `GET /gestao/oportunidades`         | Lista de oportunidades com contagem de candidatos | `gestao_oportunidades`             |
+| `GET /gestao/kanban`                | Vista Kanban das oportunidades                    | `page_kanban`                      |
+| `GET /gestao/criar-oportunidade`    | Formulário de criação de nova oportunidade        | `page_criar_oportunidade`          |
+| `GET /gestao/candidaturas`          | Kanban de todas as candidaturas por estágio       | `page_gestao_candidaturas`         |
+| `GET /gestao/oportunidades/<id>`    | Detalhe da oportunidade com lista de candidatos   | `page_gestao_oportunidade_detalhe` |
+| `GET /gestao/candidatos/<id>`       | Perfil completo de um candidato                   | `page_gestao_candidato_detalhe`    |
 
 ### ⚙️ API Endpoints (JSON-RPC)
 
@@ -295,28 +282,24 @@ docker compose exec -T web python3 /tmp/seed_runner.py
 | RNF-02 | Hot-reload (`--dev=reload`)                             | ⚠️ A flag está configurada no `docker-compose.yml`, mas alterações em XML **exigem** atualização manual do módulo (`-u crm_estudantil`) para que o Odoo recarregue as views da BD. O hot-reload cobre apenas ficheiros Python e assets estáticos.       |
 | RNF-03 | Formulário público com validação e sanitização de input | ⚠️ Existe validação no frontend (JavaScript), mas a **validação server-side** no controlador Python é mínima — verifica apenas se `nome` e `email` foram passados, sem sanitização robusta contra injecção ou validação de formato de email no backend. |
 
-### ❌ Problemas e Dívida Técnica Identificados
+### ❌ Problemas e Dívida Técnica (Resolvidos e Restantes)
 
-**1. Duplicação de rotas e vistas**
-Existem dois conjuntos de rotas para funcionalidades idênticas:
+~~**1. Duplicação de rotas e vistas**~~ (Resolvido)
+As rotas foram unificadas. O tráfego dos estudantes flui unicamente por `/portal/...` e a gestão administrativa usa exclusivamente `/gestao/...`. As vistas legadas do portal e ficheiros inúteis (`portal.py`) foram eliminadas.
 
-- `/oportunidades` e `/portal/oportunidades` — ambas listam oportunidades para o estudante
-- `/candidatura` e `/portal/candidatura` — ambas servem o formulário de candidatura
-- `/faq` e `/portal/faq` — duplicado
-
-Isto sugere uma refactorização a meio que nunca foi concluída, criando redundância de código e potencial inconsistência de comportamento.
-
-**2. Rotas de gestão sem verificação de perfil**
-Rotas como `/dashboard` e `/kanban` usam `auth='public'`, tornando dados de gestão acessíveis sem qualquer autenticação. O SRS (RNF-03) refere-se especificamente ao formulário, mas a exposição de dados administrativos a utilizadores não autenticados é uma falha de segurança.
+~~**2. Rotas de gestão sem verificação de perfil**~~ (Resolvido)
+Todas as rotas sob `/gestao/...` exigem agora o grupo `base.group_user`, barrando publicamente utilizadores não autenticados de aceder a dashboards e funis de vendas.
 
 **3. Bug de cache de assets em Docker**
 Ao reiniciar o ambiente Docker (ex: após `docker compose down && up`), surgem erros do tipo `AssetsLoadingError` porque os registos em `ir_attachment` apontam para ficheiros do filestore que já não existem. Requer limpeza manual via SQL. Este é um problema de arquitectura do ambiente de desenvolvimento que deveria ter um script de reset automatizado.
 
 **4. Typo no nome de ficheiro de controller**
-O ficheiro `gestao_canditatos.py` tem um erro ortográfico ("canditatos" em vez de "candidatos"). Pequeno detalhe, mas revela falta de revisão de código em equipa.
+O ficheiro `gestao_canditatos.py` tem um erro ortográfico ("canditatos" em vez de "candidatos"). Pequeno detalhe que carece de correcção para manter a excelência técnica.
 
-**5. `survey.public_url` inexistente no Odoo 17**
-A view original de questionários usava `survey.public_url`, um atributo que não existe no Odoo 17. Este bug indica que o código foi escrito sem ser testado no ambiente real, possivelmente baseado em documentação de versões anteriores.
+~~**5. `survey.public_url` inexistente no Odoo 17**~~ (Resolvido)
+A integração com Inquéritos utiliza agora o método nativo mais recente (`get_start_url()`) substituindo código legado quebrado.
+
+**6. Nova Funcionalidade:** As FAQs deixaram de ser estáticas. É agora utilizado um modelo `crm.faq` persistido em Base de Dados. Os gestores podem fazer CRUD a perguntas frequentes via backoffice.
 
 ### 📊 Pontuação Global (estimativa honesta)
 
