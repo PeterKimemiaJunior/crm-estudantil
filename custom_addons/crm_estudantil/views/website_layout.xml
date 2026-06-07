@@ -76,7 +76,7 @@
                                     <a class="nav-item" href="/web#action=crm_estudantil.action_crm_faq">
                                         <span class="nav-icon">⚙️</span> Gerir FAQs
                                     </a>
-                                    <a class="nav-item" href="/web#model=survey.survey&amp;view_type=list">
+                                    <a class="nav-item" href="/web#action=survey.action_survey_form">
                                         <span class="nav-icon">📋</span> Gerir Inquéritos
                                     </a>
                                 </t>
