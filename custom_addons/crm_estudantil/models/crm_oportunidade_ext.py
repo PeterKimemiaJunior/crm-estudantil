@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from datetime import date
 
 class Opportunity(models.Model):
     _name = "crm.oportunidades"
@@ -39,3 +41,10 @@ class Opportunity(models.Model):
     def _compute_total_candidaturas(self):
         for rec in self:
             rec.total_candidaturas = len(rec.candidaturas_ids)
+
+    @api.constrains('deadline')
+    def _check_deadline(self):
+        for rec in self:
+            if rec.deadline:
+                if rec.deadline < date.today():
+                    raise ValidationError('Prazo não pode ser anterior à data de hoje.')

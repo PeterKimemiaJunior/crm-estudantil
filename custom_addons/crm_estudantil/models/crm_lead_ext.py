@@ -1,4 +1,10 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+import re
+
+
+EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+STUDENT_RE = re.compile(r'^[0-9A-Za-z\-]{4,20}$')
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
@@ -35,6 +41,31 @@ class CrmLead(models.Model):
     )
 
     color = fields.Integer(compute='_compute_color', store=True)
+
+    _sql_constraints = [
+        ('student_opportunity_uniq', 'UNIQUE(student_number, oportunidade_id)', 'Já existe uma candidatura com este número de estudante para a mesma oportunidade.'),
+    ]
+
+    @api.constrains('email_from')
+    def _check_email(self):
+        for rec in self:
+            if rec.email_from:
+                if not EMAIL_RE.match(rec.email_from):
+                    raise ValidationError('Email inválido: %s' % rec.email_from)
+
+    @api.constrains('year')
+    def _check_year(self):
+        for rec in self:
+            if rec.year is not None and rec.year != 0:
+                if rec.year < 0 or rec.year > 2100:
+                    raise ValidationError('Ano curricular inválido.')
+
+    @api.constrains('student_number')
+    def _check_student_number(self):
+        for rec in self:
+            if rec.student_number:
+                if not STUDENT_RE.match(rec.student_number):
+                    raise ValidationError('Número de estudante inválido. Deve conter 4-20 caracteres alfanuméricos ou hífen.')
 
     @api.depends('opportunity_type')
     def _compute_color(self):

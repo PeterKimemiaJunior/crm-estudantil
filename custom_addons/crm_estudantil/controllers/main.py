@@ -110,7 +110,7 @@ class CrmEstudantilController(http.Controller):
     def faq(self, **kwargs):
         return request.render('crm_estudantil.page_faq')
 
-    @http.route('/dashboard', type='http', auth='public', website=True)
+    @http.route('/dashboard', type='http', auth='user', website=True)
     def dashboard(self, **kwargs):
         all_leads = request.env['crm.lead'].sudo().search([('type', '=', 'lead')])
         total = len(all_leads)
@@ -125,15 +125,15 @@ class CrmEstudantilController(http.Controller):
             'stats': stats, 'total': total, 'taxa_sucesso': taxa_sucesso,
         })
 
-    @http.route('/kanban', type='http', auth='public', website=True)
+    @http.route('/kanban', type='http', auth='user', website=True)
     def kanban(self, **kwargs):
         return request.render('crm_estudantil.page_kanban')
 
-    @http.route('/criar-oportunidade', type='http', auth='public', website=True)
+    @http.route('/criar-oportunidade', type='http', auth='user', website=True)
     def criar_oportunidade(self, **kwargs):
         return request.render('crm_estudantil.page_criar_oportunidade')
 
-    @http.route('/api/oportunidades/create', type='json', auth='public', methods=['POST'])
+    @http.route('/api/oportunidades/create', type='json', auth='user', methods=['POST'])
     def submit_oportunidade(self, **kwargs):
         try:
             payload = json.loads(request.httprequest.data.decode('utf-8'))
